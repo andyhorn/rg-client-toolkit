@@ -1,11 +1,10 @@
 <template>
   <div id="app">
-    <nav>
-      <div class="nav-wrapper red darken-3">
-        <ul class="left">
-          <li><router-link to="/">Home</router-link></li>
-          <li><router-link to="/about">About</router-link></li>
-          <li><router-link to="/scan">Port Scan</router-link></li>
+    <nav class="nav-extended red darken-2">
+      <div class="nav-content">
+        <ul class="tabs tabs-transparent">
+          <li class="tab"><router-link to="/">Home</router-link></li>
+          <li class="tab"><router-link to="/scan">Port Scan</router-link></li>
         </ul>
       </div>
     </nav>
@@ -28,7 +27,7 @@ nav a:hover {
 
 nav a.router-link-exact-active {
   color: white;
-  background: rgb(126, 34, 34);
+  background: rgb(153, 35, 35);
 }
 
 * {

@@ -1,11 +1,24 @@
 <template>
     <div id="port-scan-form">
         <form @submit="scanPorts" class="col s12">
-            <PortScanTextInput v-bind:values="this.host" />
-            <PortScanTextInput v-bind:values="this.ports[0]" />
-            <PortScanTextInput v-bind:values="this.ports[1]" />
-            <PortScanTextInput v-bind:values="this.ports[2]" />
-            <button class="btn waves-effect">Scan!</button>
+            <div class="row">
+                <div class="col s12">
+                    <PortScanTextInput v-bind:values="this.host" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s4">
+                    <PortScanTextInput v-bind:values="this.ports[0]" />
+                </div>
+                <div class="col s4">
+                    <PortScanTextInput v-bind:values="this.ports[1]" />
+                </div>
+                <div class="col s4">
+                    <PortScanTextInput v-bind:values="this.ports[2]" />
+                </div>
+            </div>
+            <button class="btn waves-effect waves-light">Scan!</button>
+            <div id="scanStatus"></div>
         </form>
     </div>
 </template>
@@ -14,6 +27,31 @@
 import PortScanTextInput from '../components/PortScanTextInput'
 const Net = require('net')
 const url = require('url')
+
+const scanStatusText = ['Scanning', 'Scanning.', 'Scanning..', 'Scanning...']
+var scans = 0, scanStatusIndex = 0, interval
+
+function startScanAnimation() {
+    interval = setInterval(updateScanText, 100)
+}
+
+function updateScanText() {
+    let scanStatusElement = document.getElementById('scanStatus')
+    let text = `<p>${scanStatusText[scanStatusIndex]}</p>`
+    scanStatusElement.innerHTML = text
+    scanStatusIndex += 1
+
+    if (scanStatusIndex == scanStatusText.length) {
+        scanStatusIndex = 0
+    }
+}
+
+function endScanAnimation() {
+    if (scans == 0) {
+        clearInterval(interval)
+        document.getElementById('scanStatus').innerText = ''
+    }
+}
 
 export default {
     name: 'PortScanForm',
@@ -52,6 +90,7 @@ export default {
     methods: {
         scanPorts(e) {
             e.preventDefault()
+            startScanAnimation()
 
             for (let port of this.ports) {
                 let value = port.value
@@ -78,7 +117,7 @@ export default {
                 })
 
                 socket.on('timeout', () => {
-                    socket.end()
+                    socket.destroy()
                     port.success = false
                 })
 
@@ -87,6 +126,12 @@ export default {
                     port.success = false
                 })
 
+                socket.on('close', () => {
+                    scans -=1
+                    endScanAnimation()
+                })
+
+                scans += 1
                 socket.connect(port.value, host)
             }
         }

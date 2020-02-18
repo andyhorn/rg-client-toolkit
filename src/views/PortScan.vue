@@ -1,25 +1,19 @@
 <template>
     <div class="container">
-        <h1>Port Scanner</h1>
-        <div class="row">
+        <h4>Port Scanner</h4>
+        <p>Enter your RLM server's IP, Hostname, or URL along with the three TCP ports listed below (the defaults are already filled).</p>
             <PortScanForm />
-        </div>
-        <div class="divider"/>
-        <div class="row">
-            <PortScanHelp />
-        </div>
     </div>
 </template>
 
 <script>
 import PortScanForm from '../components/PortScanForm'
-import PortScanHelp from '../components/PortScanHelp'
+// import PortScanHelp from '../components/PortScanHelp'
 
 export default {
     name: 'PortScan',
     components: {
-        PortScanForm,
-        PortScanHelp
+        PortScanForm
     }
 }
 </script>

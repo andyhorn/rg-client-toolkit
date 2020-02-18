@@ -24,8 +24,9 @@ export default {
 </script>
 
 <style scoped>
-    input[type="text"] {
+    .input-field > input[type="text"] {
         padding: 0 5px;
+        margin: 0px;
         border-radius: 1px;
     }
 </style>
