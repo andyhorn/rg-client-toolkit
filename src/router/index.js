@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import PortScan from '../views/PortScan.vue'
+import LicenseScan from '../views/LicenseScan.vue'
 
 Vue.use(VueRouter);
 
@@ -15,6 +16,11 @@ const routes = [
     path: "/scan",
     name: "PortScan",
     component: PortScan
+  },
+  {
+    path: "/license",
+    name: "LicenseScan",
+    component: LicenseScan
   }
 ];
 

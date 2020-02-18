@@ -5,6 +5,7 @@
         <ul class="tabs tabs-transparent">
           <li class="tab"><router-link to="/">Home</router-link></li>
           <li class="tab"><router-link to="/scan">Port Scan</router-link></li>
+          <li class="tab"><router-link to="/license">License Scan</router-link></li>
         </ul>
       </div>
     </nav>
