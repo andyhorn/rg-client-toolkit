@@ -26,11 +26,6 @@ nav a:hover {
   text-decoration: none;
 }
 
-nav a.router-link-exact-active {
-  color: white;
-  background: rgb(153, 35, 35);
-}
-
 * {
   box-sizing: border-box;
 }
