@@ -18,6 +18,7 @@
     "jquery": "^3.4.1",
     "materialize-css": "^1.0.0",
     "popper.js": "^1.16.1",
+    "sudo-prompt": "^9.1.1",
     "vue": "^2.6.11",
     "vue-router": "^3.1.5"
   },

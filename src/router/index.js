@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import PortScan from '../views/PortScan.vue'
 import LicenseScan from '../views/LicenseScan.vue'
 import LicenseCreator from '../views/LicenseCreator.vue'
+import SerialRemoval from '../views/SerialRemoval.vue'
 
 Vue.use(VueRouter);
 
@@ -25,6 +26,11 @@ const routes = [
     path: '/create',
     name: 'LicenseCreator',
     component: LicenseCreator
+  },
+  {
+    path: "/serials",
+    name: "SerialRemoval",
+    component: SerialRemoval
   }
 ];
 
