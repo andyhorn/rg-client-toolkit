@@ -42,16 +42,22 @@ export default {
         this.folderList = this.$refs.folder
     },
     methods: {
+        clearResults() {
+            this.display = false
+            this.$refs.file.innerHTML = ''
+            this.$refs.folder.innerHTML = ''
+        },
         scan() {
+            this.clearResults()
             this.display = true
             console.log('scan started!')
             if (this.defaultDirExists()) {
                 console.log('default directory exists!')
-                this.addListItem('folder', 'License directory found!', 'green-text')
+                this.addListItem('folder', 'License directory found!', 'green-text', 'check')
                 if (this.isLowerCase()) {
-                    this.addListItem('folder', 'Uses lowercase "licenses"', 'green-text')
+                    this.addListItem('folder', 'Uses lowercase "licenses"', 'green-text', 'check')
                 } else {
-                    this.addListItem('folder', 'Folder uses capital "L", please change to all lowercase', 'red-text')
+                    this.addListItem('folder', 'Folder uses capital "L", please change to all lowercase', 'red-text', 'close')
                 }
 
                 console.log('scanning for license files')
@@ -61,18 +67,19 @@ export default {
 
                 this.displayLicenses(files)
             } else {
-                this.addListItem('folder', 'License directory not found', 'red-text')
+                this.addListItem('folder', 'License directory not found', 'red-text', 'close')
                 if (this.checkSpelling()) {
-                    this.addListItem('folder', 'License folder misspelled, please change to "licenses"', 'red-text')
+                    this.addListItem('folder', 'License folder misspelled, please change to "licenses"', 'red-text', 'close')
                 }
             }
         },
-        addListItem(ref, content, color) {
+        addListItem(ref, content, color, icon) {
             let component = Vue.extend(ScanResult)
             let instance = new component({
                 propsData: {
                     text: content,
-                    color
+                    color,
+                    icon
                 }
             })
             instance.$mount()
@@ -86,18 +93,20 @@ export default {
                 }
             })
 
+            instance.$on('rescan', this.scan)
+
             instance.$mount()
             this.$refs.file.appendChild(instance.$el)
         },
         displayLicenses(licenseList) {
             if (licenseList.length == 0) {
                 console.log('no license files found')
-                this.addListItem('file', 'No license file found', 'red-text')
+                this.addListItem('file', 'No license file found', 'red-text', 'close')
             } else {
                 if (licenseList.length == 1) {
-                    this.addListItem('file', 'Single license file found - no conflicts', 'green-text')
+                    this.addListItem('file', 'Single license file found - no conflicts', 'green-text', 'check')
                 } else {
-                    this.addListItem('file', 'Multiple license files found - conflicts likely', 'red-text')
+                    this.addListItem('file', 'Multiple license files found - conflicts likely', 'red-text', 'close')
                 }
 
                 let dirPath = this.getLicenseDirPath()
