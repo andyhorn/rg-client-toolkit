@@ -4,6 +4,7 @@ import PortScan from '../views/PortScan.vue'
 import LicenseScan from '../views/LicenseScan.vue'
 import LicenseCreator from '../views/LicenseCreator.vue'
 import SerialRemoval from '../views/SerialRemoval.vue'
+import Options from '../views/Options.vue'
 
 Vue.use(VueRouter);
 
@@ -31,6 +32,11 @@ const routes = [
     path: "/serials",
     name: "SerialRemoval",
     component: SerialRemoval
+  },
+  {
+    path: '/options',
+    name: "Options",
+    component: Options
   }
 ];
 
