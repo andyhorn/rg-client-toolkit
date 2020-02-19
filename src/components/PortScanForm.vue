@@ -28,6 +28,8 @@ import PortScanTextInput from '../components/PortScanTextInput'
 const Net = require('net')
 const url = require('url')
 
+const TIMEOUT = 5 * 1000
+
 const scanStatusText = ['Scanning', 'Scanning.', 'Scanning..', 'Scanning...']
 var scans = 0, scanStatusIndex = 0, interval
 
@@ -95,6 +97,7 @@ export default {
 
             for (let port of this.ports) {
                 let value = port.value
+                port.success = null
 
                 if (value == null) {
                     return
@@ -110,7 +113,7 @@ export default {
 
                 let socket = new Net.Socket()
 
-                socket.setTimeout(1500)
+                socket.setTimeout(TIMEOUT)
 
                 socket.on('connect', () => {
                     socket.end()
