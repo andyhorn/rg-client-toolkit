@@ -2,8 +2,8 @@
     <div class="container">
         <div class="row">
             <div class="col s12">
-                <h3>RLM Options</h3>
-                <p>Manage your RLM options on this machine, including toggling client logging and the "Render Only" status.</p>
+                <h3>Other Options</h3>
+                <p>Manage your miscellaneous options on this machine, including toggling client logging and the "Render Only" status.</p>
             </div>
         </div>
         <div class="row flex">

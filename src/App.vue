@@ -1,23 +1,39 @@
 <template>
   <div id="app">
-    <nav class="nav-extended red darken-2">
-      <div class="nav-content">
-        <ul class="tabs tabs-transparent">
-          <li class="tab"><router-link to="/scan">Port Scan</router-link></li>
-          <li class="tab"><router-link to="/license">License Scan</router-link></li>
-          <li class="tab"><router-link to="/create">License Creator</router-link></li>
-          <li class="tab"><router-link to="/serials">Serial Removal</router-link></li>
-          <li class="tab"><router-link to="/options">RLM Options</router-link></li>
+    <nav>
+      <div class="nav-wrapper">
+        <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul class="hide-on-med-and-down">
+          <li><router-link to="/scan">Port Scan</router-link></li>
+          <li><router-link to="/license">License Scan</router-link></li>
+          <li><router-link to="/create">License Creator</router-link></li>
+          <li><router-link to="/serials">Serial Removal</router-link></li>
+          <li><router-link to="/options">Other Options</router-link></li>
         </ul>
       </div>
     </nav>
+    <ul class="sidenav grey lighten-2" id="mobile-nav">
+      <li><router-link to="/scan">Port Scan</router-link></li>
+      <li><router-link to="/license">License Scan</router-link></li>
+      <li><router-link to="/create">License Creator</router-link></li>
+      <li><router-link to="/serials">Serial Removal</router-link></li>
+      <li><router-link to="/options">Other Options</router-link></li>
+    </ul>
     <router-view />
   </div>
 </template>
 
 <script>
+const $ = window.$ = window.jQuery = require('jquery')
+// const M = require('materialize-css')
+
 export default {
-  name: 'App'
+  name: 'App',
+  mounted() {
+    $(document).ready(() => {
+      $('.sidenav').sidenav()
+    })
+  }
 }
 </script>
 
