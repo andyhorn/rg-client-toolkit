@@ -42,6 +42,9 @@ export default {
         this.folderList = this.$refs.folder
     },
     methods: {
+        testLicense(data) {
+            this.$emit('testLicense', data)
+        },
         clearResults() {
             this.display = false
             this.$refs.file.innerHTML = ''
@@ -94,6 +97,7 @@ export default {
             })
 
             instance.$on('rescan', this.scan)
+            instance.$on('testLicense', this.testLicense)
 
             instance.$mount()
             this.$refs.file.appendChild(instance.$el)

@@ -15,16 +15,24 @@
                 </ul>
             </div>
         </div>
-        <LicenseScanner />
+        <LicenseScanner v-on:testLicense="this.testLicense" />
     </div>
 </template>
 
 <script>
 import LicenseScanner from '../components/LicenseScanner.vue'
+
 export default {
     name: 'LicenseScan',
     components: {
         LicenseScanner
+    },
+    methods: {
+        testLicense(data) {
+            let host = data.host
+            let port = data.port
+            this.$router.push(`/scan?host=${host}&port=${port}`)
+        } 
     }
 }
 </script>

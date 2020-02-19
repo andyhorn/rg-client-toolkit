@@ -58,18 +58,19 @@ export default {
     components: {
         PortScanTextInput
     },
+    props: ['hostValue', 'rlmPortValue'],
     data() {
         return {
             host: {
                 title: 'Server Address',
-                value: null,
+                value: this.hostValue,
                 required: true
             },
             ports: [
                 {
                     name: 'rlmPort',
                     title: 'RLM Port',
-                    value: '5053',
+                    value: this.rlmPortValue || '5053',
                     success: null
                 },
                 {

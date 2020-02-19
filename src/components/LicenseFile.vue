@@ -24,7 +24,7 @@
             </tr>
         </table>
         <div class="buttons">
-            <LicenseTestButton v-bind:host="license.host" v-bind:port="license.port" />
+            <LicenseTestButton v-on:testLicense="this.testLicense" v-bind:host="license.host" v-bind:port="license.port" />
         </div>
     </li>    
 </template>
@@ -74,6 +74,11 @@ export default {
         reScan() {
             console.log('rename complete event caught, emitting rescan event')
             this.$emit('rescan')
+        },
+        testLicense(data) {
+            console.log('test button clicked')
+            console.log(data)
+            this.$emit('testLicense', data)
         }
     }
 }
