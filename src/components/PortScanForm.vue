@@ -1,26 +1,24 @@
 <template>
-    <div id="port-scan-form">
-        <form @submit="scanPorts" class="col s12">
-            <div class="row">
-                <div class="col s12">
+        <b-form @submit="scanPorts" class="container">
+            <b-row>
+                <b-col>
                     <PortScanTextInput v-bind:values="this.host" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s4">
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col>
                     <PortScanTextInput v-bind:values="this.ports[0]" />
-                </div>
-                <div class="col s4">
+                </b-col>
+                <b-col>
                     <PortScanTextInput v-bind:values="this.ports[1]" />
-                </div>
-                <div class="col s4">
+                </b-col>
+                <b-col>
                     <PortScanTextInput v-bind:values="this.ports[2]" />
-                </div>
-            </div>
-            <button class="btn waves-effect waves-light">Scan!</button>
+                </b-col>
+            </b-row>
+            <b-button type="submit" class="md-raised md-primary">Scan!</b-button>
             <div id="scanStatus"></div>
-        </form>
-    </div>
+        </b-form>
 </template>
 
 <script>
@@ -92,6 +90,7 @@ export default {
     },
     methods: {
         scanPorts(e) {
+            console.log('button clicked')
             e.preventDefault()
             startScanAnimation()
 

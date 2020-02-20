@@ -1,18 +1,18 @@
 <template>
 
-    <div class="row">
-        <div class="input-field col s12">
-            <input type="text"
-            v-model="values.value"
-            v-bind:required="values.required"
-            class="validate"
-            v-bind:id="values.name"
-            v-bind:name="values.name"
-            v-bind:class="values.success ? 'green white-text' : values.success === false ? 'red white-text' : ''"
-            />
-            <label class="active" v-bind:for="values.name">{{ values.title }}</label>
+        <div>
+            <b-form-group
+                v-bind:label="values.title"
+                v-bind:label-for="values.name"
+            >
+                <b-form-input
+                    v-bind:id="values.name"
+                    v-model="values.value"
+                    v-bind:required="values.required"
+                    v-bind:class="values.success ? 'bg-success text-white' : values.success === false ? 'bg-danger text-white' : ''"
+                ></b-form-input>
+            </b-form-group>
         </div>
-    </div>
 
 </template>
 
@@ -24,9 +24,17 @@ export default {
 </script>
 
 <style scoped>
-    .input-field > input[type="text"] {
+    input[type="text"] {
         padding: 0 5px;
         margin: 0px;
         border-radius: 1px;
+    }
+    input[type="text"].md-input.success {
+        background: green !important;
+        color: white !important;
+    }
+
+    input.md-input.failure {
+        background: red !important;
     }
 </style>

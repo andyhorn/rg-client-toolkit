@@ -1,9 +1,13 @@
 <template>
-    <div class="container">
-        <h4>Port Scanner</h4>
-        <p>Enter your RLM server's IP, Hostname, or URL along with the three TCP ports listed below (the defaults are already filled).</p>
-        <PortScanForm :hostValue="this.$route.query.host" :rlmPortValue="this.$route.query.port"/>
-    </div>
+    <b-container id="port-scan">
+        <b-row>
+            <h3>Port Scanner</h3>
+            <p>Enter your RLM server's IP, Hostname, or URL along with the three TCP ports listed below (the defaults are already filled).</p>
+        </b-row>
+        <b-row>
+            <PortScanForm :hostValue="this.$route.query.host" :rlmPortValue="this.$route.query.port"/>
+        </b-row>
+    </b-container>
 </template>
 
 <script>
@@ -33,16 +37,7 @@ export default {
 </script>
 
 <style scoped>
-    h1 {
-        text-align: center;
-    }
-    ul {
-        padding-left: 15px;
-    }
-    table {
-        font-size: 0.9rem;
-    }
-    tr, th, td {
-        border: none;
+    #port-scan {
+        margin-top: 1rem;
     }
 </style>

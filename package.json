@@ -14,9 +14,9 @@
   "main": "background.js",
   "dependencies": {
     "bootstrap": "^4.4.1",
+    "bootstrap-vue": "^2.5.0",
     "core-js": "^3.6.4",
     "jquery": "^3.4.1",
-    "materialize-css": "^1.0.0",
     "popper.js": "^1.16.1",
     "sudo-prompt": "^9.1.1",
     "vue": "^2.6.11",
