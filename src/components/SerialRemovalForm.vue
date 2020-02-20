@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button @click="this.clean" class="btn btn-large waves-effect">Remove Serials</button><br/>
+        <b-button @click="this.clean" size="lg" variant="primary">Remove Serials</b-button><br/>
         <span>* requires administrative rights</span>
     </div>
 </template>

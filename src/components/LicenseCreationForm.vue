@@ -1,20 +1,20 @@
 <template>
     <div id="license-form">
-        <form>
-            <div class="row">
-                <div class="col s6 input-field">
-                    <input type="text" v-model="host" autofocus required>
+        <b-form>
+            <b-row>
+                <b-col>
+                    <b-form-input type="text" v-model="host" autofocus required></b-form-input>
                     <label class="active">Server Address</label>
-                </div>
-                <div class="col s6 input-field">
-                    <input type="text" v-model="port" required>
+                </b-col>
+                <b-col>
+                    <b-form-input type="text" v-model="port" required></b-form-input>
                     <label class="active">RLM Port</label>
-                </div>
-                <div class="col s12">
-                    <button @click="this.save" class="btn">Save</button>
-                </div>
-            </div>
-        </form>
+                </b-col>
+                <b-col cols="12">
+                    <b-button variant="primary" @click="this.save" class="btn">Save</b-button>
+                </b-col>
+            </b-row>
+        </b-form>
     </div>    
 </template>
 

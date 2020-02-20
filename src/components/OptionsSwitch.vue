@@ -1,11 +1,6 @@
 <template>
-    <div class="switch">
-        <label>
-            Off
-            <input type="checkbox" ref="checkbox" @change="this.changed">
-            <span class="lever"></span>
-            On
-        </label>
+    <div>
+        <b-form-checkbox switch size="lg" ref="checkbox" v-model="checked">{{ checked ? 'ON' : 'OFF'}}</b-form-checkbox>
     </div>
 </template>
 
@@ -15,16 +10,12 @@ export default {
     props: ['isSet'],
     data() {
         return {
-            value: null
+            checked: this.isSet
         }
     },
-    mounted() {
-        this.$refs.checkbox.checked = this.isSet
-    },
-    methods: {
-        changed() {
-            console.log(this.$refs.checkbox.checked)
-            let val = this.$refs.checkbox.checked
+    watch: {
+        checked: function(val) {
+            console.log(val)
             this.$emit('valueChanged', val)
         }
     }

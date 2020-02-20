@@ -2,7 +2,7 @@
     <div>
         <b-row>
             <b-col>
-                <b-button variant="outline-primary" @click="scan">Scan</b-button>
+                <b-button variant="primary" @click="scan">Scan</b-button>
             </b-col>
         </b-row>
         <b-row v-bind:class="this.display ? 'visible' : 'hidden'">

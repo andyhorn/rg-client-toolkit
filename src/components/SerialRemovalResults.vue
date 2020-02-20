@@ -1,16 +1,14 @@
 <template>
-    <div>
-        <table>
-            <tr>
-                <th>Platform</th>
-                <td>{{ platform }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ status }}</td>
-            </tr>
-        </table>
-    </div>
+    <b-table-simple>
+        <b-tr>
+            <b-th>Platform</b-th>
+            <b-td>{{ platform }}</b-td>
+        </b-tr>
+        <b-tr>
+            <b-th>Status</b-th>
+            <b-td>{{ status }}</b-td>
+        </b-tr>
+    </b-table-simple>
 </template>
 
 <script>

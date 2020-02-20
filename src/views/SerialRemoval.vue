@@ -1,30 +1,30 @@
 <template>
-    <div class="container">
-        <div class="row">
-            <div class="col s12">
+    <b-container class="pt-5">
+        <b-row>
+            <b-col>
                 <h3>Serial Management</h3>
                 <p>If you used serial numbers in the past and would like to remove them from this machine, click the button below.</p>
                 <p>Note: This will not work with serials installed through the Red Giant Application Manager.</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col s12">
+            </b-col>
+        </b-row>
+        <b-row>
+            <b-col>
                 <SerialRemovalForm
                     v-on:clean="this.clean" 
                 />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col s12">
+            </b-col>
+        </b-row>
+        <b-row class="pt-3">
+            <b-col>
                 <SerialRemovalResults 
                     v-bind:platform="this.platform" 
                     v-bind:status="this.status" 
                     v-bind:success="this.success"
                     v-if="this.display"
                 />
-            </div>
-        </div>
-    </div>
+            </b-col>
+        </b-row>
+    </b-container>
 </template>
 
 <script>

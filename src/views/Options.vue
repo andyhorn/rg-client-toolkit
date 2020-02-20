@@ -1,12 +1,12 @@
 <template>
-    <div class="container">
-        <div class="row">
-            <div class="col s12">
+    <b-container class="pt-5">
+        <b-row>
+            <b-col>
                 <h3>Other Options</h3>
                 <p>Manage your miscellaneous options on this machine, including toggling client logging and the "Render Only" status.</p>
-            </div>
-        </div>
-        <div class="row flex">
+            </b-col>
+        </b-row>
+        <b-row class="flex">
             <div>
                 <h5>Render Only</h5>
                 <OptionsSwitch
@@ -21,8 +21,8 @@
                     v-on:valueChanged="this.setClientLogging"
                 />
             </div>
-        </div>
-    </div>
+        </b-row>
+    </b-container>
 </template>
 
 <script>
