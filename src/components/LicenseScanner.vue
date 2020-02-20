@@ -1,20 +1,20 @@
 <template>
     <div>
-        <div class="row">
-            <div class="col s12 center">
-                <button @click="scan" class="waves-effect waves-light btn-large"><i class="material-icons right">folder_open</i>Scan</button>
-            </div>
-        </div>
-        <div v-bind:class="this.display ? 'visible' : 'hidden'" class="row">
-            <div class="col s12">
+        <b-row>
+            <b-col>
+                <b-button variant="outline-primary" @click="scan">Scan</b-button>
+            </b-col>
+        </b-row>
+        <b-row v-bind:class="this.display ? 'visible' : 'hidden'">
+            <b-col cols="12" class="my-3">
                 <h5>License File</h5>
-                <ul id="file-list" ref="file" class="collection"></ul>
-            </div>
-            <div class="col s12">
+                <ResultsColumn id="file-list" ref="file"/>
+            </b-col>
+            <b-col cols="12" class="my-3">
                 <h5>License Directory</h5>
-                <ul id="folder-list" ref="folder" class="collection"></ul>
-            </div>
-        </div>
+                <ResultsColumn id="folder-list" ref="folder"/>
+            </b-col>
+        </b-row>
     </div>
 </template>
 
@@ -25,6 +25,11 @@ import LicenseFile from '../components/LicenseFile.vue'
 import Vue from 'vue'
 import path from 'path'
 import fs from 'fs'
+
+const SUCCESS = 'text-success'
+const FAILURE = 'text-danger'
+const SUCCESS_ICON = 'check'
+const FAILURE_ICON = 'close'
 
 export default {
     name: 'LicenseScanner',
@@ -56,11 +61,11 @@ export default {
             console.log('scan started!')
             if (this.defaultDirExists()) {
                 console.log('default directory exists!')
-                this.addListItem('folder', 'License directory found!', 'green-text', 'check')
+                this.addListItem('folder', 'License directory found!', SUCCESS, SUCCESS_ICON)
                 if (this.isLowerCase()) {
-                    this.addListItem('folder', 'Uses lowercase "licenses"', 'green-text', 'check')
+                    this.addListItem('folder', 'Uses lowercase "licenses"', SUCCESS, SUCCESS_ICON)
                 } else {
-                    this.addListItem('folder', 'Folder uses capital "L", please change to all lowercase', 'red-text', 'close')
+                    this.addListItem('folder', 'Folder uses capital "L", please change to all lowercase', FAILURE, FAILURE_ICON)
                 }
 
                 console.log('scanning for license files')
@@ -70,9 +75,9 @@ export default {
 
                 this.displayLicenses(files)
             } else {
-                this.addListItem('folder', 'License directory not found', 'red-text', 'close')
+                this.addListItem('folder', 'License directory not found', FAILURE, FAILURE_ICON)
                 if (this.checkSpelling()) {
-                    this.addListItem('folder', 'License folder misspelled, please change to "licenses"', 'red-text', 'close')
+                    this.addListItem('folder', 'License folder misspelled, please change to "licenses"', FAILURE, FAILURE_ICON)
                 }
             }
         },
@@ -105,12 +110,12 @@ export default {
         displayLicenses(licenseList) {
             if (licenseList.length == 0) {
                 console.log('no license files found')
-                this.addListItem('file', 'No license file found', 'red-text', 'close')
+                this.addListItem('file', 'No license file found', FAILURE, FAILURE_ICON)
             } else {
                 if (licenseList.length == 1) {
-                    this.addListItem('file', 'Single license file found - no conflicts', 'green-text', 'check')
+                    this.addListItem('file', 'Single license file found - no conflicts', SUCCESS, SUCCESS_ICON)
                 } else {
-                    this.addListItem('file', 'Multiple license files found - conflicts likely', 'red-text', 'close')
+                    this.addListItem('file', 'Multiple license files found - conflicts likely', FAILURE, FAILURE_ICON)
                 }
 
                 let dirPath = this.getLicenseDirPath()

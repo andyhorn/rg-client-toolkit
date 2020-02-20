@@ -16,7 +16,7 @@
                     <PortScanTextInput v-bind:values="this.ports[2]" />
                 </b-col>
             </b-row>
-            <b-button type="submit" class="md-raised md-primary">Scan!</b-button>
+            <b-button type="submit" variant="primary">Scan!</b-button>
             <div id="scanStatus"></div>
         </b-form>
 </template>

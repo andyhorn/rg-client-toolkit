@@ -1,22 +1,22 @@
 <template>
-    <div class="container">
-        <div class="row">
-            <div class="col s12">
+    <b-container class="pt-5">
+        <b-row>
+            <b-col>
                 <h3>License Scanner</h3>
                 <p>Use this tool to ensure your machine is properly set up with the client license file.</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col s12">
+            </b-col>
+        </b-row>
+        <b-row>
+            <b-col>
                 <p>This file must be located in the correct folder to work:</p>
                 <ul>
                     <li><strong>Windows:</strong> C:\ProgramData\Red Giant\licenses</li>
                     <li><strong>Mac:</strong> /Users/Shared/Red Giant/licenses</li>
                 </ul>
-            </div>
-        </div>
-        <LicenseScanner v-on:testLicense="this.testLicense" />
-    </div>
+            </b-col>
+        </b-row>
+            <LicenseScanner v-on:testLicense="this.testLicense" />
+    </b-container>
 </template>
 
 <script>

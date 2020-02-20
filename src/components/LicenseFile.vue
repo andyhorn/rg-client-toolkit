@@ -1,32 +1,32 @@
 <template>
-    <li class="collection-item left-align">
-        <table class="table-borderless">
-            <tr>
-                <th>File</th>
-                <td>{{ license.name }}</td>
-            </tr>
-            <tr>
-                <th>Address</th>
-                <td>{{ license.host }}</td>
-            </tr>
-            <tr>
-                <th>RLM Port</th>
-                <td>{{ license.port }}</td>
-            </tr>
-            <tr v-if="this.isConfig">
-                <th>Warnings</th>
-                <td>
+    <b-list-group-item class="m-0 p-0">
+        <b-table-simple>
+            <b-tr>
+                <b-th>File</b-th>
+                <b-td>{{ license.name }}</b-td>
+            </b-tr>
+            <b-tr>
+                <b-th>Address</b-th>
+                <b-td>{{ license.host }}</b-td>
+            </b-tr>
+            <b-tr>
+                <b-th>RLM Port</b-th>
+                <b-td>{{ license.port }}</b-td>
+            </b-tr>
+            <b-tr v-if="this.isConfig">
+                <b-th>Warnings</b-th>
+                <b-td>
                     <div class="warning-content">
                         License file ends with '.config' extension, please change to '.lic' extension
                         <ConfigFixButton :oldPath="this.oldPath" :newPath="this.newPath" v-on:renameComplete="this.reScan" />
                     </div>
-                </td>
-            </tr>
-        </table>
+                </b-td>
+            </b-tr>
+        </b-table-simple>
         <div class="buttons">
             <LicenseTestButton v-on:testLicense="this.testLicense" v-bind:host="license.host" v-bind:port="license.port" />
         </div>
-    </li>    
+    </b-list-group-item>    
 </template>
 
 <script>

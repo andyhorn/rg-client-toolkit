@@ -1,8 +1,10 @@
 <template>
-    <b-container id="port-scan">
+    <b-container class="pt-5" id="port-scan">
         <b-row>
-            <h3>Port Scanner</h3>
-            <p>Enter your RLM server's IP, Hostname, or URL along with the three TCP ports listed below (the defaults are already filled).</p>
+            <b-col>
+                <h3>Port Scanner</h3>
+                <p>Enter your RLM server's IP, Hostname, or URL along with the three TCP ports listed below (the defaults are already filled).</p>
+            </b-col>
         </b-row>
         <b-row>
             <PortScanForm :hostValue="this.$route.query.host" :rlmPortValue="this.$route.query.port"/>

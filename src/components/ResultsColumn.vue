@@ -1,9 +1,9 @@
 <template>
     <div>
         <h5>{{ title }}</h5>
-        <ul class="collection" v-bind:ref="ref">
+        <b-list-group v-bind:ref="ref">
 
-        </ul>
+        </b-list-group>
     </div>
 </template>
 

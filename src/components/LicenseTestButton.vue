@@ -1,6 +1,10 @@
 <template>
     <div class="button-box">
-        <button @click="this.testMe" v-bind:data-host="host" v-bind:data-port="port" class="btn btn-small waves-effect">Test</button>    
+        <b-button 
+            @click="this.testMe" 
+            v-bind:data-host="host" 
+            v-bind:data-port="port" 
+            variant="primary">Test</b-button>    
     </div>
 </template>
 

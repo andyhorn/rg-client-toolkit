@@ -1,7 +1,7 @@
 <template>
-    <li class="collection-item">
-        <p class="mx-auto" v-bind:class="color"><i class="material-icons left">{{ icon }}</i>{{ text }}</p>
-    </li>
+    <b-list-group-item class="m-0">
+        <p class="m-0" v-bind:class="color"><i class="material-icons left">{{ icon }}</i>{{ text }}</p>
+    </b-list-group-item>
 </template>
 
 <script>
@@ -12,7 +12,5 @@ export default {
 </script>
 
 <style scoped>
-    .collection-item p {
-        margin: 0;
-    }
+
 </style>
