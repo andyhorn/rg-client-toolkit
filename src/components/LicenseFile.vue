@@ -1,5 +1,5 @@
 <template>
-    <b-list-group-item class="m-0 p-0">
+    <b-list-group-item class="m-0 my-1 p-0 border border-dark rounded">
         <b-table-simple>
             <b-tr>
                 <b-th>File</b-th>

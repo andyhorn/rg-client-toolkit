@@ -4,7 +4,7 @@
             @click="this.testMe" 
             v-bind:data-host="host" 
             v-bind:data-port="port" 
-            variant="primary">Test</b-button>    
+            variant="primary">Test License</b-button>    
     </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-    <button @click="fix" class="btn btn-small waves-effect">Fix!</button>
+    <b-button @click="fix" variant="success">Fix Extension</b-button>
 </template>
 
 <script>

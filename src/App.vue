@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <b-navbar toggleable="md" type="dark" variant="info">
+    <b-navbar toggleable="md" type="dark" variant="dark">
       <b-navbar-brand href="#">Red Giant Toolkit</b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -13,9 +13,11 @@
           <b-nav-item to="/options">Other Options</b-nav-item>
         </b-navbar-nav>
       </b-collapse>
-    </b-navbar>    
-      <router-view />
 
+    </b-navbar>    
+
+      <router-view/>
+      
   </div>
 </template>
 

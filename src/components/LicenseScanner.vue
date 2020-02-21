@@ -8,11 +8,11 @@
         <b-row v-bind:class="this.display ? 'visible' : 'hidden'">
             <b-col cols="12" class="my-3">
                 <h5>License File</h5>
-                <ResultsColumn id="file-list" ref="file"/>
+                <b-list-group id="file-list" ref="file"></b-list-group>
             </b-col>
             <b-col cols="12" class="my-3">
                 <h5>License Directory</h5>
-                <ResultsColumn id="folder-list" ref="folder"/>
+                <b-list-group id="folder-list" ref="folder"></b-list-group>
             </b-col>
         </b-row>
     </div>
@@ -30,6 +30,35 @@ const SUCCESS = 'text-success'
 const FAILURE = 'text-danger'
 const SUCCESS_ICON = 'check'
 const FAILURE_ICON = 'close'
+
+function getParentDir(dirPath) {
+    let baseDir = getBaseDir(dirPath)
+    console.log('[getParentDir] dirPath: ' + dirPath)
+    console.log('[getParentDir] baseDir: ' + baseDir)
+    let parentDir = path.dirname(baseDir)
+    console.log('[getParentDir] parentDir: ' + parentDir)
+    return parentDir
+}
+
+function getBaseDir(fullPath) {
+    if (fs.existsSync(fullPath)) {
+        let stat = fs.statSync(fullPath)
+        return stat.isDirectory() ? fullPath : path.dirname(fullPath)
+    }
+    return null
+}
+
+function getFileName(fullPath) {
+    if (!fs.existsSync(fullPath)) {
+        return null
+    }
+
+    if (fs.statSync(fullPath).isFile()) {
+        return path.basename(fullPath)
+    } else {
+        return null
+    }
+}
 
 export default {
     name: 'LicenseScanner',
@@ -90,6 +119,7 @@ export default {
                     icon
                 }
             })
+
             instance.$mount()
             this.$refs[ref].appendChild(instance.$el)
         },
@@ -133,7 +163,7 @@ export default {
             let license = {}
             let values = fileContents.split(' ')
 
-            license.name = filePath
+            license.name = getFileName(filePath)
             license.host = values[1].trim()
             license.port = values[3].trim()
 
@@ -141,7 +171,7 @@ export default {
         },
         checkSpelling() {
             let dirPath = this.getLicenseDirPath()
-            let rgDir = this.getParentDir(dirPath)
+            let rgDir = getParentDir(dirPath)
 
             let regex = new RegExp('[L|l]i[c|s]en[c|s]es?$')
             let dirContents = fs.readdirSync(rgDir)
@@ -162,7 +192,7 @@ export default {
         },
         isLowerCase() {
             let dirPath = this.getLicenseDirPath()
-            let parentDir = this.getParentDir(dirPath)
+            let parentDir = getParentDir(dirPath)
 
             let dirContents = fs.readdirSync(parentDir)
             dirContents = dirContents.filter(d => d.includes('icenses'))
@@ -171,15 +201,6 @@ export default {
                 return dirContents[0] === 'licenses'
             } else {
                 return false
-            }
-        },
-        getParentDir(dirPath) {
-            let splitPath = dirPath.split(path.sep)
-            if (splitPath.length > 1) {
-                let parentPath = dirPath.split(path.sep).slice(0, -1).join(path.sep)
-                return parentPath
-            } else {
-                return dirPath
             }
         },
         defaultDirExists() {
