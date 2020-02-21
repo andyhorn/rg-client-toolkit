@@ -19,13 +19,13 @@
 </template>
 
 <script>
-import ScanResult from '../components/ScanResult.vue'
-import LicenseFile from '../components/LicenseFile.vue'
+import ScanResult from './ScanResult.vue'
+import LicenseFile from './LicenseFile.vue'
+import ScanResultWithButton from './ScanResultWithButton.vue'
 
 import Vue from 'vue'
 import path from 'path'
 import fs from 'fs'
-import ScanResultWithButton from './ScanResultWithButton.vue'
 
 const SUCCESS = 'text-success'
 const FAILURE = 'text-danger'

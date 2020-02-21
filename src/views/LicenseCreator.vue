@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import LicenseCreationForm from '../components/LicenseCreationForm.vue'
+import LicenseCreationForm from '../components/create/LicenseCreationForm.vue'
 
 export default {
     name: 'LicenseCreator',

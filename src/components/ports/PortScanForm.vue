@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import PortScanTextInput from '../components/PortScanTextInput'
+import PortScanTextInput from './PortScanTextInput'
 const Net = require('net')
 const url = require('url')
 

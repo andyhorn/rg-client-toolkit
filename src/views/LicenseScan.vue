@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import LicenseScanner from '../components/LicenseScanner.vue'
+import LicenseScanner from '../components/license/LicenseScanner.vue'
 
 export default {
     name: 'LicenseScan',

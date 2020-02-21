@@ -28,8 +28,8 @@
 </template>
 
 <script>
-import SerialRemovalForm from '../components/SerialRemovalForm.vue'
-import SerialRemovalResults from '../components/SerialRemovalResults.vue'
+import SerialRemovalForm from '../components/serials/SerialRemovalForm.vue'
+import SerialRemovalResults from '../components/serials/SerialRemovalResults.vue'
 import path from 'path'
 const sudo = require('sudo-prompt')
 

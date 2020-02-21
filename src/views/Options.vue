@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import OptionsSwitch from '../components/OptionsSwitch.vue'
+import OptionsSwitch from '../components/other/OptionsSwitch.vue'
 import path from 'path'
 import fs from 'fs'
 

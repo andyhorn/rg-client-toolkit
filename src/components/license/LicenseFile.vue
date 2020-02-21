@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import LicenseTestButton from '../components/LicenseTestButton.vue'
-import RenameButton from '../components/RenameButton.vue'
+import LicenseTestButton from './LicenseTestButton.vue'
+import RenameButton from './RenameButton.vue'
 import path from 'path'
 
 export default {

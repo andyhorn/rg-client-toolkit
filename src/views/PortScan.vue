@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import PortScanForm from '../components/PortScanForm'
+import PortScanForm from '../components/ports/PortScanForm'
 
 export default {
     name: 'PortScan',
