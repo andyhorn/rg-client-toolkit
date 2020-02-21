@@ -25,6 +25,7 @@ import LicenseFile from '../components/LicenseFile.vue'
 import Vue from 'vue'
 import path from 'path'
 import fs from 'fs'
+import ScanResultWithButton from './ScanResultWithButton.vue'
 
 const SUCCESS = 'text-success'
 const FAILURE = 'text-danger'
@@ -94,7 +95,15 @@ export default {
                 if (this.isLowerCase()) {
                     this.addListItem('folder', 'Uses lowercase "licenses"', SUCCESS, SUCCESS_ICON)
                 } else {
-                    this.addListItem('folder', 'Folder uses capital "L", please change to all lowercase', FAILURE, FAILURE_ICON)
+                    // this.addListItem('folder', 'Folder uses capital "L", please change to all lowercase', FAILURE, FAILURE_ICON)
+                    let directoryFrom = this.getLicenseDirPath()
+                    let parentDir = getParentDir(directoryFrom)
+                    let directoryTo = path.join(parentDir, 'licenses')
+
+                    this.addListItemWithRenameButton('folder', 
+                        'Folder uses capital "L", please change to lowercase', 
+                        FAILURE, FAILURE_ICON,
+                        directoryFrom, directoryTo)
                 }
 
                 console.log('scanning for license files')
@@ -120,6 +129,22 @@ export default {
                 }
             })
 
+            instance.$mount()
+            this.$refs[ref].appendChild(instance.$el)
+        },
+        addListItemWithRenameButton(ref, content, color, icon, renameFrom, renameTo) {
+            let component = Vue.extend(ScanResultWithButton)
+            let instance = new component({
+                propsData: {
+                    text: content,
+                    color,
+                    icon,
+                    from: renameFrom,
+                    to: renameTo
+                }
+            })
+
+            instance.$on('rescan', this.scan)
             instance.$mount()
             this.$refs[ref].appendChild(instance.$el)
         },

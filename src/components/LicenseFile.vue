@@ -13,12 +13,12 @@
                 <b-th>RLM Port</b-th>
                 <b-td>{{ license.port }}</b-td>
             </b-tr>
-            <b-tr v-if="this.isConfig">
+            <b-tr v-if="this.configWarning">
                 <b-th>Warnings</b-th>
                 <b-td>
                     <div class="warning-content">
                         License file ends with '.config' extension, please change to '.lic' extension
-                        <ConfigFixButton :oldPath="this.oldPath" :newPath="this.newPath" v-on:renameComplete="this.reScan" />
+                        <RenameButton :oldPath="licenseFrom" :newPath="licenseTo" v-on:renameComplete="reScan" />
                     </div>
                 </b-td>
             </b-tr>
@@ -31,35 +31,36 @@
 
 <script>
 import LicenseTestButton from '../components/LicenseTestButton.vue'
-import ConfigFixButton from '../components/ConfigFixButton.vue'
+import RenameButton from '../components/RenameButton.vue'
+import path from 'path'
 
 export default {
     name: 'LicenseFile',
-    props: ['license'],
+    props: ['license', 'isCaps'],
     components: {
         LicenseTestButton,
-        ConfigFixButton
+        RenameButton
     },
     data() {
         return {
-            isConfig: false,
-            oldPath: null,
-            newPath: null
+            configWarning: false,
+            licenseFrom: null,
+            licenseTo: null
         }
     },
     mounted() {
-        let isConfig = this.license.name.endsWith('.config')
+        // let isConfig = this.license.name.endsWith('.config')
+        let isConfig = path.extname(this.license.name) == '.config'
         console.log(isConfig ? 'Config file detected' : 'proper lic file detected')
 
         if (isConfig) {
-            this.oldPath = this.license.name
-            this.newPath = this.changeExtension(this.oldPath, '.config', '.lic')
+            this.configWarning = true
+            this.licenseFrom = this.license.name
+            this.licenseTo = this.changeExtension(this.oldPath, '.config', '.lic')
 
             console.log(`oldPath: ${this.oldPath}`)
             console.log(`newPath: ${this.newPath}`)
         }
-
-        this.isConfig = isConfig
     },
     methods: {
         changeExtension(oldPath, oldExtension, newExtension) {

@@ -1,5 +1,5 @@
 <template>
-    <b-button @click="fix" variant="success">Fix Extension</b-button>
+    <b-button @click="fix" variant="success">Fix!</b-button>
 </template>
 
 <script>
