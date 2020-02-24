@@ -1,10 +1,10 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import PortScan from '../views/PortScan.vue'
-import LicenseScan from '../views/LicenseScan.vue'
-import LicenseCreator from '../views/LicenseCreator.vue'
-import SerialRemoval from '../views/SerialRemoval.vue'
-import Options from '../views/Options.vue'
+import PortScan from "../views/PortScan.vue";
+import LicenseScan from "../views/LicenseScan.vue";
+import LicenseCreator from "../views/LicenseCreator.vue";
+import SerialRemoval from "../views/SerialRemoval.vue";
+import Options from "../views/Options.vue";
 
 Vue.use(VueRouter);
 
@@ -24,8 +24,8 @@ const routes = [
     component: LicenseScan
   },
   {
-    path: '/create',
-    name: 'LicenseCreator',
+    path: "/create",
+    name: "LicenseCreator",
     component: LicenseCreator
   },
   {
@@ -34,7 +34,7 @@ const routes = [
     component: SerialRemoval
   },
   {
-    path: '/options',
+    path: "/options",
     name: "Options",
     component: Options
   }

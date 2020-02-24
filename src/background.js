@@ -1,6 +1,6 @@
 "use strict";
 
-import { app, protocol, BrowserWindow, ipcMain, ipcRenderer } from "electron";
+import { app, protocol, BrowserWindow } from "electron";
 import {
   createProtocol
   /* installVueDevtools */
@@ -77,7 +77,6 @@ app.on("ready", async () => {
     // }
   }
   createWindow();
-
 });
 
 // Exit cleanly on request from parent process in development mode.

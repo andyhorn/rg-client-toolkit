@@ -13,22 +13,18 @@
           <b-nav-item to="/options">Other Options</b-nav-item>
         </b-navbar-nav>
       </b-collapse>
+    </b-navbar>
 
-    </b-navbar>    
-
-      <router-view/>
-      
+    <router-view />
   </div>
 </template>
 
 <script>
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue'
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue/dist/bootstrap-vue";
 export default {
-  name: 'App'
-}
+  name: "App"
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

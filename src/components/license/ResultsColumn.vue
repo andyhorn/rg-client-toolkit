@@ -1,19 +1,15 @@
 <template>
-    <div>
-        <h5>{{ title }}</h5>
-        <b-list-group v-bind:ref="ref">
-
-        </b-list-group>
-    </div>
+  <div>
+    <h5>{{ title }}</h5>
+    <b-list-group v-bind:ref="ref"> </b-list-group>
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'ResultsColumn',
-    props: ['title', 'ref']
-}
+  name: "ResultsColumn",
+  props: ["title", "ref"]
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
