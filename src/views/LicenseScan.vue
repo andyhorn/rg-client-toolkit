@@ -24,6 +24,8 @@
 
 <script>
 import LicenseScanner from "../components/license/LicenseScanner.vue";
+import Log from "../utils/log";
+const log = new Log();
 
 export default {
   name: "LicenseScan",
@@ -32,8 +34,16 @@ export default {
   },
   methods: {
     testLicense(data) {
+      log.info(
+        "[LicenseScan] transferring license data to port scan utility..."
+      );
       let host = data.host;
       let port = data.port;
+
+      log.debug(`[LicenseScan.vue] host: ${host}`);
+      log.debug(`[LicenseScan.vue] port: ${port}`);
+
+      log.verbose("[LicenseScan] redirecting to port scanner...");
       this.$router.push(`/scan?host=${host}&port=${port}`);
     }
   }

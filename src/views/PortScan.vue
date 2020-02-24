@@ -33,9 +33,6 @@ export default {
     log.verbose("[PortScan.vue] mounted");
     let query = this.$route.query;
 
-    log.debug(`[PortScan.vue] query:`);
-    log.debug(query);
-
     if (query && (query.host || query.port)) {
       log.info("[PortScan.vue] URL query parameters present");
       if (query.host) {

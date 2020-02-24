@@ -11,12 +11,18 @@
 </template>
 
 <script>
+import Log from "../../utils/log";
+const log = new Log();
+
 export default {
   name: "LicenseTestButton",
   props: ["host", "port"],
   methods: {
     testMe() {
+      log.verbose("[LicenseTestButton] button click detected");
       let data = { host: this.host, port: this.port };
+      log.debug("[LicenseTestButton.vue] data:");
+      log.debug(data);
       this.$emit("testLicense", data);
     }
   }

@@ -42,6 +42,8 @@
 import LicenseTestButton from "./LicenseTestButton.vue";
 import RenameButton from "./RenameButton.vue";
 import path from "path";
+import Log from "../../utils/log";
+const log = new Log();
 
 export default {
   name: "LicenseFile",
@@ -58,10 +60,16 @@ export default {
     };
   },
   mounted() {
+    log.debug("[LicenseFile.vue] view mounted");
     let isConfig = path.extname(this.license.name) == ".config";
-    console.log(isConfig ? "Config file detected" : "proper lic file detected");
+    log.verbose(
+      isConfig
+        ? "[LicenseFile] Config file detected"
+        : "[LicenseFile] proper lic file detected"
+    );
 
     if (isConfig) {
+      log.debug("[LicenseFile.vue] setting license rename parameters");
       this.configWarning = true;
       this.licenseFrom = this.license.fullPath;
       this.licenseTo = this.changeExtension(
@@ -70,27 +78,35 @@ export default {
         ".lic"
       );
 
-      console.log(`oldPath: ${this.oldPath}`);
-      console.log(`newPath: ${this.newPath}`);
+      log.debug(`[LicenseFile.vue] license path from: ${this.licenseFrom}`);
+      log.debug(`[LicenseFIle.vue] license path to: ${this.licenseTo}`);
     }
   },
   methods: {
     changeExtension(oldPath, oldExtension, newExtension) {
+      log.debug("[LicenseFile.vue] changing extension...");
+      log.debug(`[LicenseFile.vue] oldPath: ${oldPath}`);
+      log.debug(`[LicenseFile.vue] oldExtension: ${oldExtension}`);
+      log.debug(`[LicenseFile.vue] newExtension: ${newExtension}`);
+
       let noExtension = oldPath.slice(0, oldPath.indexOf(oldExtension));
-      console.log(`no extension: ${noExtension}`);
+      log.debug(`[LicenseFile.vue] no extension: ${noExtension}`);
 
       let newPath = noExtension + newExtension;
-      console.log(`new path: ${newPath}`);
+      log.debug(`[LicenseFile.vue] new path: ${newPath}`);
 
       return newPath;
     },
     reScan() {
-      console.log("rename complete event caught, emitting rescan event");
+      log.verbose(
+        "[LicenseFile] rename complete event caught, emitting rescan event"
+      );
       this.$emit("rescan");
     },
     testLicense(data) {
-      console.log("test button clicked");
-      console.log(data);
+      log.verbose("[LicenseFile] test button clicked");
+      log.debug(`[LicenseFile.vue] license data:`);
+      log.debug(data);
       this.$emit("testLicense", data);
     }
   }

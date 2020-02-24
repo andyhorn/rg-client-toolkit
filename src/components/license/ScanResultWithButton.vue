@@ -18,6 +18,8 @@
 
 <script>
 import RenameButton from "./RenameButton.vue";
+import Log from "../../utils/log";
+const log = new Log();
 
 export default {
   name: "ScanResult",
@@ -27,6 +29,9 @@ export default {
   },
   methods: {
     rescan() {
+      log.debug(
+        "[ScanResultWithButton.vue] rescan event detected, passing to parent"
+      );
       this.$emit("rescan");
     }
   }

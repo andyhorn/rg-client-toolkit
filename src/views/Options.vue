@@ -32,11 +32,16 @@
 import OptionsSwitch from "../components/other/OptionsSwitch.vue";
 import path from "path";
 import fs from "fs";
+import Log from "../utils/log";
+const log = new Log();
 
 function getOptionsFilePath() {
+  log.verbose("[Options] generating executable path for current platform...");
   if (process.platform == "win32") {
+    log.verbose("[Options] using Windows platform");
     return path.join("C:", "ProgramData", "Red Giant", "licenses");
   } else {
+    log.verbose("[Options] using macOS/Unix/Linux platform");
     return path.join("Users", "Shared", "Red Giant", "licenses");
   }
 }
@@ -53,25 +58,29 @@ export default {
     };
   },
   beforeMount() {
+    log.debug("[Options.vue] reading options file before view mounts");
     this.readOptions();
   },
   methods: {
     setRenderOnly(val) {
-      console.log(`render only now set to: ${val}`);
+      log.debug("[Options.vue] setting render only property to: " + val);
       this.isRenderOnly = val;
+      log.debug("[Options.vue] updating file");
       this.updateFile();
     },
     setClientLogging(val) {
-      console.log(`client logging now set to: ${val}`);
+      log.debug(`[Options.vue] setting client logging to: ${val}`);
       this.hasClientLogging = val;
+      log.debug("[Options.vue] updating file");
       this.updateFile();
     },
     updateFile() {
-      console.log("updating options file");
+      log.verbose("[Options] updating options file");
       let filename = path.join(getOptionsFilePath(), "rlm-options.txt");
-      console.log(filename);
+      log.debug(`[Options.vue] filename: ${filename}`);
       let data = "";
 
+      log.verbose("[Options] generating file data...");
       if (this.isRenderOnly && this.hasClientLogging) {
         data = "REDGIANT_RENDER_ONLY=true\nREDGIANT_ENTERPRISE_LOGGING=true";
       } else if (this.isRenderOnly) {
@@ -79,22 +88,25 @@ export default {
       } else if (this.hasClientLogging) {
         data = "REDGIANT_ENTERPRISE_LOGGING=true";
       }
+      log.debug("[Options.vue] file data:");
+      log.debug(data);
 
-      console.log("data:");
-      console.log(data);
-
+      log.debug("[Options.vue] writing data to file");
       fs.writeFileSync(filename, data);
     },
     readOptions() {
-      console.log("reading options file");
+      log.verbose("[Options] reading file data...");
       let filename = path.join(getOptionsFilePath(), "rlm-options.txt");
+      log.debug(`[Options.vue] filename: ${filename}`);
 
       if (fs.existsSync(filename)) {
-        console.log("file exists");
+        log.verbose("[Options] file found, reading...");
         let data = fs.readFileSync(filename, {
           encoding: "utf-8"
         });
-        console.log(data);
+        log.debug("[Options.vue] file data:");
+        log.debug(data);
+
         for (let line of data.split("\n")) {
           if (line.includes("REDGIANT_ENTERPRISE_LOGGING")) {
             this.hasClientLogging = line.endsWith("true");

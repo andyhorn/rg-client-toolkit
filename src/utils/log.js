@@ -27,7 +27,18 @@ module.exports = class Log {
     return message;
   }
 
+  checkLevel() {
+    if (
+      process.env.LOG_LEVEL != null &&
+      getLevel(process.env.LOG_LEVEL) != getLevel(this.level)
+    ) {
+      this.level = getLevel(process.env.LOG_LEVEL);
+    }
+  }
+
   print(level, message) {
+    this.checkLevel();
+
     if (this.level < levels.indexOf(level)) {
       return;
     }

@@ -8,11 +8,14 @@
 </template>
 
 <script>
+import Log from "../../utils/log";
+const log = new Log();
+
 export default {
   name: "SerialRemovalForm",
   methods: {
     clean() {
-      console.log("button clicked");
+      log.debug("[SerialRemovalForm] clean button clicked");
       this.$emit("clean");
     }
   }

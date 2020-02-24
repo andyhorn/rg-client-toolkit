@@ -45,7 +45,7 @@ function startScanAnimation() {
 function updateScanText() {
   let scanStatusElement = document.getElementById("scanStatus");
   let text = `<p>${scanStatusText[scanStatusIndex]}</p>`;
-  log.debug(`[PortScanForm.vue] updaing scan text to: ${text}`);
+  log.debug(`[PortScanForm.vue] updating scan text to: ${text}`);
   scanStatusElement.innerHTML = text;
   scanStatusIndex += 1;
 
@@ -55,8 +55,8 @@ function updateScanText() {
 }
 
 function endScanAnimation() {
-  log.verbose("[PortScanForm.vue] ending scan animation");
   if (scans == 0) {
+    log.verbose("[PortScanForm.vue] ending scan animation");
     log.debug(`[PortScanForm.vue] clearing interval...`);
     clearInterval(interval);
     log.debug(`[PortScanForm.vue] interval cleared`);
@@ -139,26 +139,28 @@ export default {
         log.debug("[PortScanForm.vue] new socket created and timeout set");
 
         socket.on("connect", () => {
-          log.verbose(`[PortScanForm] port ${port} connected successfully`);
+          log.verbose(
+            `[PortScanForm] port ${port.value} connected successfully`
+          );
           socket.end();
           port.success = true;
         });
 
         socket.on("timeout", () => {
-          log.warning(`[PortScanForm] port ${port} timed out`);
+          log.warning(`[PortScanForm] port ${port.value} timed out`);
           socket.destroy();
           port.success = false;
         });
 
         socket.on("error", err => {
-          log.error(`[PortScanForm] fatal error on port ${port}`);
+          log.error(`[PortScanForm] fatal error on port ${port.value}`);
           log.error(err);
           socket.end();
           port.success = false;
         });
 
         socket.on("close", () => {
-          log.debug(`[PortScanForm.vue] socket closed for port ${port}`);
+          log.debug(`[PortScanForm.vue] socket closed for port ${port.value}`);
           log.debug(
             `[PortScanForm.vue] decrementing scan counter from ${scans}`
           );
@@ -171,7 +173,7 @@ export default {
         log.debug(`[PortScanForm.vue] scan counter incremented to ${scans}`);
 
         log.verbose(
-          `[PortScanForm] initiating connection on port "${port}" to host "${host}"`
+          `[PortScanForm] initiating connection on port "${port.value}" to host "${host}"`
         );
         socket.connect(port.value, host);
       }

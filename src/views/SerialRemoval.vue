@@ -35,6 +35,8 @@
 import SerialRemovalForm from "../components/serials/SerialRemovalForm.vue";
 import SerialRemovalResults from "../components/serials/SerialRemovalResults.vue";
 import path from "path";
+import Log from "../utils/log";
+const log = new Log();
 const sudo = require("sudo-prompt");
 
 function getPlatform() {
@@ -44,8 +46,10 @@ function getPlatform() {
 function pathToUtil() {
   let platform = getPlatform();
   if (platform == "win32") {
+    log.verbose("[SerialRemoval] generating executable path for Windows");
     return path.join(process.cwd(), "src", "assets", "bin", "rgdeploy.exe");
   } else {
+    log.verbose("[SerialRemoval] generating executable path for Unix/macOS");
     return path.join(process.cwd(), "src", "assets", "bin", "rgdeploy");
   }
 }
@@ -65,20 +69,24 @@ export default {
     };
   },
   mounted() {
+    log.debug("[SerialRemoval.vue] mounted");
     if (process.platform == "win32") {
+      log.debug("[SerialRemoval.vue] setting platform as Windows");
       this.platform = "Windows";
     } else if (process.platform == "darwin") {
+      log.debug("[SerialRemoval.vue] setting platform as macOS X");
       this.platform = "macOS";
     }
   },
   methods: {
     clean() {
-      console.log("cleaning...");
+      log.info("[SerialRemoval] cleaning...");
       let command = `"${pathToUtil()}" --removeserials`;
-      console.log(command);
+      log.debug(`[SerialRemoval.vue] executable command: ${command}`);
       this.status = "Running...";
       this.display = true;
 
+      log.verbose("[SerialRemoval] execting command");
       sudo.exec(
         command,
         {
@@ -86,20 +94,26 @@ export default {
         },
         (err, stdout, stderr) => {
           if (err || stderr) {
+            log.info("[SerialRemoval] execution failed");
             this.status = "Failed";
             if (err) {
-              console.log("fatal error");
-              console.log(err);
+              log.error(err);
+              // console.log("fatal error");
+              // console.log(err);
             }
             if (stderr) {
-              console.log("process error");
-              console.log(stderr);
+              log.error(stderr);
+              // console.log("process error");
+              // console.log(stderr);
             }
           } else {
             this.status = "Success!";
+            log.info("[SerialRemoval] execution successful");
             if (stdout) {
-              console.log("success!");
-              console.log(stdout);
+              log.verbose(`[SerialRemoval] execution output:`);
+              log.verbose(stdout);
+              // console.log("success!");
+              // console.log(stdout);
             }
           }
         }

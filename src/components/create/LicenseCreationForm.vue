@@ -29,12 +29,18 @@
 import fs from "fs";
 import path from "path";
 const { dialog } = require("electron").remote;
+import Log from "../../utils/log";
+const log = new Log();
 
 function getLicenseDirPath() {
+  log.verbose("[LicenseCreationForm] finding file path for platform...");
   let platform = process.platform;
+  log.debug(`[LicenseCreationForm] platform detected ${platform}`);
   if (platform == "win32") {
+    log.verbose("[LicenseCreationForm] path for Windows found");
     return path.join("C:", "ProgramData", "Red Giant", "licenses");
   } else {
+    log.verbose("[LicenseCreationForm] path for Unix/Linux/macOS found");
     return path.join("Users", "Shared", "Red Giant", "licenses");
   }
 }
@@ -49,9 +55,13 @@ export default {
   },
   methods: {
     save() {
+      log.info("[LicenseCreationForm] saving license...");
       let data = `HOST ${this.host} ANY ${this.port}`;
       let filename = "redgiant-client.primary.lic";
       let defaultPath = path.join(getLicenseDirPath(), filename);
+
+      log.debug(`[LicenseCreationForm.vue] data string: ${data}`);
+      log.debug(`[LicenseCreationForm.vue] default path: ${defaultPath}`);
 
       let chosenPath = dialog.showSaveDialogSync({
         title: "Save License File",
@@ -59,8 +69,13 @@ export default {
       });
 
       if (chosenPath) {
+        log.info("[LicenseCreationForm] license saved!");
+        log.debug(`[LicenseCreationForm.vue] path chosen: ${chosenPath}`);
         fs.writeFileSync(chosenPath, data);
+        log.verbose(`[LicenseCreationForm] file write completed`);
       }
+
+      log.info("[LicenseCreationForm] license save canceled");
     }
   }
 };

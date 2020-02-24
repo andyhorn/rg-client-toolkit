@@ -7,6 +7,9 @@
 </template>
 
 <script>
+import Log from "../../utils/log";
+const log = new Log();
+
 export default {
   name: "OptionsSwitch",
   props: ["isSet"],
@@ -17,7 +20,7 @@ export default {
   },
   watch: {
     checked: function(val) {
-      console.log(val);
+      log.debug(`[OptionsSwitch.vue] checked value changed to: ${val}`);
       this.$emit("valueChanged", val);
     }
   }
