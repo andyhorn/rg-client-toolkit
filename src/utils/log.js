@@ -1,5 +1,11 @@
+import fs from "fs";
+import path from "path";
+import getAppDataPath from "appdata-path";
+
 const DEFAULT_LOG_LEVEL = "debug";
 const levels = ["NONE", "LOG", "INFO", "VERBOSE", "DEBUG"];
+const LOG_PATH = path.join(getAppDataPath(), "Red Giant Toolkit", "Logs");
+
 function getLevel(level) {
   level = level.toUpperCase();
   if (!levels.includes(level)) {
@@ -9,9 +15,17 @@ function getLevel(level) {
   }
 }
 
-module.exports = class Log {
+export default class Log {
   constructor() {
     this.level = getLevel(process.env.LOG_LEVEL || DEFAULT_LOG_LEVEL);
+    this.checkFilePath();
+  }
+
+  checkFilePath() {
+    // let path = DEFAULT_PATHS[process.platform];
+    fs.mkdirSync(LOG_PATH, {
+      recursive: true
+    });
   }
 
   getTime() {
@@ -36,6 +50,32 @@ module.exports = class Log {
     }
   }
 
+  write(message, level) {
+    if (console) {
+      if (level == "warning") {
+        console.warn(message);
+      } else if (level == "error") {
+        console.error(message);
+      } else {
+        console.log(message);
+      }
+    }
+    let filepath = LOG_PATH;
+    let filename;
+    if (level == "warning") {
+      filename = path.join(filepath, "warning.log");
+    } else if (level == "error") {
+      filename = path.join(filepath, "error.log");
+    } else {
+      filename = path.join(filepath, "log.log");
+    }
+    console.log("[Log] writing file to: " + filename);
+    fs.writeFileSync(filename, message + "\n", {
+      encoding: "utf-8",
+      flag: "a"
+    });
+  }
+
   print(level, message) {
     this.checkLevel();
 
@@ -47,7 +87,9 @@ module.exports = class Log {
       message = `[${level}] ${this.addTimestamp(message)}`;
     }
 
-    console.log(message);
+    this.write(message, level);
+
+    // console.log(message);
   }
 
   log(message) {
@@ -73,7 +115,8 @@ module.exports = class Log {
 
     message = this.addTimestamp(message);
 
-    console.warn(message);
+    // console.warn(message);
+    this.write(message, "warning");
   }
 
   error(message) {
@@ -83,6 +126,7 @@ module.exports = class Log {
 
     message = this.addTimestamp(message);
 
-    console.error(message);
+    // console.error(message);
+    this.write(message, "error");
   }
-};
+}
