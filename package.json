@@ -1,6 +1,8 @@
 {
-  "name": "redgiantclienttools",
-  "version": "0.1.0",
+  "name": "red-giant-client-toolkit",
+  "description": "A suite of utilities for managing Red Giant client settings",
+  "author": {"email": "andyjhorn@gmail.com", "name": "Andy Horn"},
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -31,6 +33,7 @@
     "@vue/eslint-config-prettier": "^6.0.0",
     "babel-eslint": "^10.0.3",
     "electron": "^6.0.0",
+    "electron-builder": "^22.3.2",
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-vue": "^6.1.2",

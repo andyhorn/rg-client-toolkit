@@ -8,8 +8,7 @@ import {
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
-global.LOG_LEVEL = process.env.NODE_ENV !== "production" ? "debug" : "info";
-console.log("Log level set to " + LOG_LEVEL)
+global.LOG_LEVEL = isDevelopment ? "debug" : "info";
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -31,8 +30,9 @@ function createWindow() {
   });
 
   const mainMenu = Menu.buildFromTemplate(menuTemplate);
-
   Menu.setApplicationMenu(mainMenu);
+
+  win.setTitle("Red Giant Client Toolkit");
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
