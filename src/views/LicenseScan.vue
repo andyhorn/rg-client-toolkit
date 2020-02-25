@@ -24,8 +24,7 @@
 
 <script>
 import LicenseScanner from "../components/license/LicenseScanner.vue";
-import Log from "../utils/log";
-const log = new Log();
+import log from "../utils/log";
 
 export default {
   name: "LicenseScan",

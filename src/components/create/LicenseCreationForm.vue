@@ -29,8 +29,7 @@
 import fs from "fs";
 import path from "path";
 const { dialog } = require("electron").remote;
-import Log from "../../utils/log";
-const log = new Log();
+import log from "../../utils/log";
 
 function getLicenseDirPath() {
   log.verbose("[LicenseCreationForm] finding file path for platform...");

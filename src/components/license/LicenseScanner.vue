@@ -26,8 +26,7 @@ import ScanResultWithButton from "./ScanResultWithButton.vue";
 import Vue from "vue";
 import path from "path";
 import fs from "fs";
-import Log from "../../utils/log";
-const log = new Log();
+import log from "../../utils/log";
 
 const SUCCESS = "text-success";
 const FAILURE = "text-danger";

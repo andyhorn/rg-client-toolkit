@@ -1,28 +1,25 @@
 import fs from "fs";
 import path from "path";
 import getAppDataPath from "appdata-path";
+const { remote } = require("electron");
 
-const DEFAULT_LOG_LEVEL = "debug";
-const levels = ["NONE", "LOG", "INFO", "VERBOSE", "DEBUG"];
+const levels = ["NONE", "INFO", "VERBOSE", "DEBUG"];
 const LOG_PATH = path.join(getAppDataPath(), "Red Giant Toolkit", "Logs");
 
-function getLevel(level) {
-  level = level.toUpperCase();
-  if (!levels.includes(level)) {
-    return -1;
-  } else {
-    return levels.indexOf(level);
-  }
-}
-
-export default class Log {
+class Log {
   constructor() {
-    this.level = getLevel(process.env.LOG_LEVEL || DEFAULT_LOG_LEVEL);
-    this.checkFilePath();
+    if (!Log.instance) {
+      Log.instance = this;
+      this.level = () => {
+        let level = getLogLevel();
+        return levelToInt(level);
+      }
+      this.checkFilePath();
+    }
+    return Log.instance;
   }
 
   checkFilePath() {
-    // let path = DEFAULT_PATHS[process.platform];
     fs.mkdirSync(LOG_PATH, {
       recursive: true
     });
@@ -39,15 +36,6 @@ export default class Log {
     }
 
     return message;
-  }
-
-  checkLevel() {
-    if (
-      process.env.LOG_LEVEL != null &&
-      getLevel(process.env.LOG_LEVEL) != getLevel(this.level)
-    ) {
-      this.level = getLevel(process.env.LOG_LEVEL);
-    }
   }
 
   write(message, level) {
@@ -69,7 +57,7 @@ export default class Log {
     } else {
       filename = path.join(filepath, "log.log");
     }
-    console.log("[Log] writing file to: " + filename);
+
     fs.writeFileSync(filename, message + "\n", {
       encoding: "utf-8",
       flag: "a"
@@ -77,9 +65,7 @@ export default class Log {
   }
 
   print(level, message) {
-    this.checkLevel();
-
-    if (this.level < levels.indexOf(level)) {
+    if (this.level() < levelToInt(level)) {
       return;
     }
 
@@ -88,8 +74,6 @@ export default class Log {
     }
 
     this.write(message, level);
-
-    // console.log(message);
   }
 
   log(message) {
@@ -115,7 +99,6 @@ export default class Log {
 
     message = this.addTimestamp(message);
 
-    // console.warn(message);
     this.write(message, "warning");
   }
 
@@ -126,7 +109,24 @@ export default class Log {
 
     message = this.addTimestamp(message);
 
-    // console.error(message);
     this.write(message, "error");
   }
 }
+
+function levelToInt(level) {
+  level = level.toUpperCase();
+  if (!levels.includes(level)) {
+    return -1;
+  } else {
+    return levels.indexOf(level);
+  }
+}
+
+function getLogLevel() {
+  let logLevel = remote.getGlobal("LOG_LEVEL");
+  return logLevel;
+}
+
+const log = new Log();
+Object.freeze(log);
+export default log;

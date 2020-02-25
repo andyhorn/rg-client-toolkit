@@ -4,8 +4,7 @@
 
 <script>
 import fs from "fs";
-import Log from "../../utils/log";
-const log = new Log();
+import log from "../../utils/log";
 
 export default {
   name: "ConfigFixButton",

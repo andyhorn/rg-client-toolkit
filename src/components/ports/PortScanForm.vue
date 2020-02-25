@@ -23,8 +23,7 @@
 
 <script>
 import PortScanTextInput from "./PortScanTextInput";
-import Log from "../../utils/log";
-const log = new Log();
+import log from "../../utils/log";
 
 const Net = require("net");
 const url = require("url");

@@ -8,8 +8,7 @@
 </template>
 
 <script>
-import Log from "../../utils/log";
-const log = new Log();
+import log from "../../utils/log";
 
 export default {
   name: "SerialRemovalForm",

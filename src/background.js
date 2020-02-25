@@ -1,12 +1,15 @@
 "use strict";
 
-import { app, protocol, BrowserWindow } from "electron";
+import { app, protocol, BrowserWindow, Menu } from "electron";
 import {
   createProtocol
   /* installVueDevtools */
 } from "vue-cli-plugin-electron-builder/lib";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
+
+global.LOG_LEVEL = process.env.NODE_ENV !== "production" ? "debug" : "info";
+console.log("Log level set to " + LOG_LEVEL)
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -26,6 +29,10 @@ function createWindow() {
       nodeIntegration: true
     }
   });
+
+  const mainMenu = Menu.buildFromTemplate(menuTemplate);
+
+  Menu.setApplicationMenu(mainMenu);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -92,4 +99,107 @@ if (isDevelopment) {
       app.quit();
     });
   }
+}
+
+const menuTemplate = [
+  {
+    label: "File",
+    submenu: [
+      {
+        label: "Tools",
+        submenu: [
+          {
+            label: "Port Scan",
+            click() {
+              win.webContents.send("navTo", "scan");
+            }
+          },
+          {
+            label: "License Scan",
+            click() {
+              win.webContents.send("navTo", "license");
+            }
+          },
+          {
+            label: "License Creator",
+            click() {
+              win.webContents.send("navTo", "create");
+            }
+          },
+          {
+            label: "Serial Removal",
+            click() {
+              win.webContents.send("navTo", "serials");
+            }
+          },
+          {
+            label: "Other Tools",
+            click() {
+              win.webContents.send("navTo", "options");
+            }
+          }
+        ]
+      },
+      {
+        role: "quit"
+      }
+    ]
+  }
+];
+
+if (process.platform == "darwin") {
+  menuTemplate.unshift({});
+}
+
+if (process.env.NODE_ENV != "production") {
+  menuTemplate.push({
+    label: "Developer Tools",
+    submenu: [
+      {
+        label: "Toggle DevTools",
+        accelerator: process.platform == "darwin" ? "Command+I" : "Ctrl+I",
+        click(item, focusedWindow) {
+          focusedWindow.toggleDevTools();
+        }
+      },
+      {
+        role: "reload"
+      }
+    ]
+  });
+
+  menuTemplate.push({
+    label: "Log Level",
+    submenu: [
+      {
+        label: "None",
+        click() {
+          setLogLevel("none");
+        }
+      },
+      {
+        label: "Info",
+        click() {
+          setLogLevel("info");
+        }
+      },
+      {
+        label: "Verbose",
+        click() {
+          setLogLevel("verbose");
+        }
+      },
+      {
+        label: "Debug",
+        click() {
+          setLogLevel("debug");
+        }
+      }
+    ]
+  });
+}
+
+function setLogLevel(level) {
+  global.LOG_LEVEL = level;
+  win.webContents.send("logLevelUpdated");
 }

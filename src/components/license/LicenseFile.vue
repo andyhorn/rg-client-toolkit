@@ -42,8 +42,7 @@
 import LicenseTestButton from "./LicenseTestButton.vue";
 import RenameButton from "./RenameButton.vue";
 import path from "path";
-import Log from "../../utils/log";
-const log = new Log();
+import log from "../../utils/log";
 
 export default {
   name: "LicenseFile",

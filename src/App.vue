@@ -22,6 +22,13 @@
 <script>
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue";
+import router from "./router/index";
+const { ipcRenderer } = require("electron");
+
+ipcRenderer.on("navTo", (e, page) => {
+  router.push("/" + page);
+});
+
 export default {
   name: "App"
 };

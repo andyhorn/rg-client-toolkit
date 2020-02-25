@@ -20,9 +20,7 @@
 
 <script>
 import PortScanForm from "../components/ports/PortScanForm";
-import Log from "../utils/log.js";
-
-const log = new Log();
+import log from "../utils/log";
 
 export default {
   name: "PortScan",

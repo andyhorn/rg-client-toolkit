@@ -35,9 +35,8 @@
 import SerialRemovalForm from "../components/serials/SerialRemovalForm.vue";
 import SerialRemovalResults from "../components/serials/SerialRemovalResults.vue";
 import path from "path";
-import Log from "../utils/log";
-const log = new Log();
 const sudo = require("sudo-prompt");
+import log from "../utils/log";
 
 function getPlatform() {
   return process.platform;

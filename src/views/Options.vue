@@ -32,8 +32,7 @@
 import OptionsSwitch from "../components/other/OptionsSwitch.vue";
 import path from "path";
 import fs from "fs";
-import Log from "../utils/log";
-const log = new Log();
+import log from "../utils/log";
 
 function getOptionsFilePath() {
   log.verbose("[Options] generating executable path for current platform...");
