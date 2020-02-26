@@ -79,7 +79,7 @@ export default {
       host: {
         title: "Server Address",
         value: this.hostValue,
-        required: true,
+        required: true
       },
       ports: [
         {
@@ -168,7 +168,9 @@ export default {
           });
 
           socket.on("close", () => {
-            log.debug(`[PortScanForm.vue] socket closed for port ${port.value}`);
+            log.debug(
+              `[PortScanForm.vue] socket closed for port ${port.value}`
+            );
             log.debug(
               `[PortScanForm.vue] decrementing scan counter from ${this.activeScans}`
             );

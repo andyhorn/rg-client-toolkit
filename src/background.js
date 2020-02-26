@@ -22,7 +22,7 @@ protocol.registerSchemesAsPrivileged([
 
 function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-  let icon = path.join(".", "assets", "icons", "png", "icon.png");
+  let icon = path.join("src", "assets", "icons", "png", "icon.png");
   console.log(icon);
 
   // Create the browser window.
@@ -44,7 +44,7 @@ function createWindow() {
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
-    if (!process.env.IS_TEST) win.webContents.openDevTools();
+    // if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol("app");
     // Load the index.html when not in development

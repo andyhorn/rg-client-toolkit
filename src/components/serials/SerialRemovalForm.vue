@@ -1,7 +1,6 @@
 <template>
   <div>
-    <b-button @click="this.clean" variant="primary"
-      >Remove Serials</b-button
+    <b-button @click="this.clean" variant="primary">Remove Serials</b-button
     ><br />
     <span>* requires administrative rights</span>
   </div>
@@ -23,6 +22,6 @@ export default {
 
 <style scoped>
 span {
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 </style>

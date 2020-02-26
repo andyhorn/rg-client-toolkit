@@ -5,15 +5,60 @@ const { remote } = require("electron");
 
 const levels = ["NONE", "INFO", "VERBOSE", "DEBUG"];
 const LOG_PATH = path.join(getAppDataPath(), "Red Giant Toolkit", "Logs");
+const INTERVAL = 10;
+const FILE_WRITE_OPTIONS = {
+  encoding: "utf-8",
+  flag: "a"
+};
+
+class Queue {
+  constructor() {
+    this.queue = [];
+  }
+
+  add(item) {
+    this.queue.push(item);
+  }
+
+  run() {
+    setInterval(this.process.bind(this), INTERVAL);
+  }
+
+  process() {
+    if (this.queue && this.queue.length) {
+      let item = this.queue.shift();
+      if (console) {
+        if (item.level == "warning") {
+          console.warn(item.data);
+        } else if (item.level == "error") {
+          console.error(item.data);
+        } else {
+          console.log(item.data);
+        }
+      }
+      fs.writeFileSync(item.filename, item.data + "\n", FILE_WRITE_OPTIONS);
+    }
+  }
+}
+
+class QueueItem {
+  constructor(filename, data, level) {
+    this.filename = filename;
+    this.data = data;
+    this.level = level;
+  }
+}
 
 class Log {
   constructor() {
     if (!Log.instance) {
       Log.instance = this;
+      this.queue = new Queue();
+      this.queue.run();
       this.level = () => {
         let level = getLogLevel();
         return levelToInt(level);
-      }
+      };
       this.checkFilePath();
     }
     return Log.instance;
@@ -30,24 +75,7 @@ class Log {
     return `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`;
   }
 
-  addTimestamp(message) {
-    if (typeof message == "string") {
-      message = `[${this.getTime()}] ${message}`;
-    }
-
-    return message;
-  }
-
-  write(message, level) {
-    if (console) {
-      if (level == "warning") {
-        console.warn(message);
-      } else if (level == "error") {
-        console.error(message);
-      } else {
-        console.log(message);
-      }
-    }
+  toQueueItem(message, level) {
     let filepath = LOG_PATH;
     let filename;
     if (level == "warning") {
@@ -58,10 +86,8 @@ class Log {
       filename = path.join(filepath, "log.log");
     }
 
-    fs.writeFileSync(filename, message + "\n", {
-      encoding: "utf-8",
-      flag: "a"
-    });
+    let item = new QueueItem(filename, message, level);
+    return item;
   }
 
   print(level, message) {
@@ -70,10 +96,11 @@ class Log {
     }
 
     if (typeof message == "string") {
-      message = `[${level}] ${this.addTimestamp(message)}`;
+      message = `[${this.getTime()}] [${level}] ${message}`;
     }
 
-    this.write(message, level);
+    let item = this.toQueueItem(message, level);
+    this.queue.add(item);
   }
 
   log(message) {
