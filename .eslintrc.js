@@ -13,6 +13,7 @@ module.exports = {
   },
   globals: {
     $: true,
-    jQuery: true
+    jQuery: true,
+    __static: true
   }
 };

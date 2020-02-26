@@ -46,10 +46,10 @@ function pathToUtil() {
   let platform = getPlatform();
   if (platform == "win32") {
     log.verbose("[SerialRemoval] generating executable path for Windows");
-    return path.join(process.cwd(), "src", "assets", "bin", "rgdeploy.exe");
+    return path.join(__static, "bin", "rgdeploy.exe");
   } else {
     log.verbose("[SerialRemoval] generating executable path for Unix/macOS");
-    return path.join(process.cwd(), "src", "assets", "bin", "rgdeploy");
+    return path.join(__static, "bin", "rgdeploy");
   }
 }
 
@@ -80,7 +80,7 @@ export default {
   methods: {
     clean() {
       log.info("[SerialRemoval] cleaning...");
-      
+
       let command = `"${pathToUtil()}" --removeserials`;
       if (getPlatform() != "win32") {
         command = `chmod 777 "${pathToUtil()}" && ` + command;
