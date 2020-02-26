@@ -152,15 +152,12 @@ const menuTemplate = [
         ]
       },
       {
-        role: "quit"
+        role: "quit",
+        label: "Quit Red Giant Client Toolkit"
       }
     ]
   }
 ];
-
-if (process.platform == "darwin") {
-  menuTemplate.unshift({});
-}
 
 if (process.env.NODE_ENV != "production") {
   menuTemplate.push({
