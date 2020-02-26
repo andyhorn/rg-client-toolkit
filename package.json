@@ -2,7 +2,7 @@
   "name": "red-giant-client-toolkit",
   "description": "A suite of utilities for managing Red Giant client settings",
   "author": {"email": "andyjhorn@gmail.com", "name": "Andy Horn"},
-  "version": "1.0.0",
+  "version": "1.1.2",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
