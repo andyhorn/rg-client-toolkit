@@ -40,7 +40,7 @@ var isScanning = false;
 function startScanAnimation() {
   if (!isScanning) {
     disableScanButton();
-    log.verbose("[PortScanForm.vue] starting scan animation");
+    log.verbose("[PortScanForm] starting scan animation");
     document.getElementById("spinBox").classList.remove("hidden");
     document.getElementById("spinBox").classList.add("visible");
     isScanning = true;

@@ -120,23 +120,11 @@ class Log {
   }
 
   warning(message) {
-    if (this.level == 0) {
-      return;
-    }
-
-    message = this.addTimestamp(message);
-
-    this.write(message, "warning");
+    this.print("warning", message);
   }
 
   error(message) {
-    if (this.level == 0) {
-      return;
-    }
-
-    message = this.addTimestamp(message);
-
-    this.write(message, "error");
+    this.write("error", message);
   }
 }
 

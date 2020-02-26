@@ -23,7 +23,6 @@ protocol.registerSchemesAsPrivileged([
 function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   let icon = path.join("src", "assets", "icons", "png", "icon.png");
-  console.log(icon);
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -33,13 +32,14 @@ function createWindow() {
       nodeIntegration: true
     },
     show: false,
-    icon: icon
+    icon: icon,
+    title: "Red Giant Client Toolkit"
   });
 
   const mainMenu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(mainMenu);
 
-  win.setTitle("Red Giant Client Toolkit");
+  // win.setTitle("Red Giant Client Toolkit");
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
