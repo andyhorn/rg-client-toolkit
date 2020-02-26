@@ -124,7 +124,7 @@ class Log {
   }
 
   error(message) {
-    this.write("error", message);
+    this.print("error", message);
   }
 }
 

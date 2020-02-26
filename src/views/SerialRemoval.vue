@@ -80,7 +80,12 @@ export default {
   methods: {
     clean() {
       log.info("[SerialRemoval] cleaning...");
+      
       let command = `"${pathToUtil()}" --removeserials`;
+      if (getPlatform() != "win32") {
+        command = `chmod 777 "${pathToUtil()}" && ` + command;
+      }
+
       log.debug(`[SerialRemoval.vue] executable command: ${command}`);
       this.status = "Running...";
       this.display = true;
