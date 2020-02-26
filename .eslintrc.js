@@ -14,6 +14,7 @@ module.exports = {
   globals: {
     $: true,
     jQuery: true,
-    __static: true
+    __static: true,
+    console: true
   }
 };
