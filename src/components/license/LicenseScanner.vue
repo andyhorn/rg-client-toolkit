@@ -33,30 +33,30 @@ const FAILURE = "text-danger";
 const SUCCESS_ICON = "check";
 const FAILURE_ICON = "alert-triangle";
 
-function getParentDir(dirPath) {
-  log.debug(
-    `[LicenseScanner.vue] finding parent directory for path: ${dirPath}`
-  );
-  let baseDir = getBaseDir(dirPath);
-  log.debug(
-    `[LicenseScanner.vue] found base dir of "${baseDir}" for path "${dirPath}"`
-  );
-  let parentDir = path.dirname(baseDir);
-  log.debug(`[LicenseScanner.vue] parent dir: ${parentDir}`);
+// function getParentDir(dirPath) {
+//   log.debug(
+//     `[LicenseScanner.vue] finding parent directory for path: ${dirPath}`
+//   );
+//   let baseDir = getBaseDir(dirPath);
+//   log.debug(
+//     `[LicenseScanner.vue] found base dir of "${baseDir}" for path "${dirPath}"`
+//   );
+//   let parentDir = path.dirname(baseDir);
+//   log.debug(`[LicenseScanner.vue] parent dir: ${parentDir}`);
 
-  return parentDir;
-}
+//   return parentDir;
+// }
 
-function getBaseDir(fullPath) {
-  log.debug(`[LicenseScanner.vue] finding base dir for path "${fullPath}"`);
-  if (fs.existsSync(fullPath)) {
-    log.debug("[LicenseScanner.vue] path exists, returning base dir");
-    let stat = fs.statSync(fullPath);
-    return stat.isDirectory() ? fullPath : path.dirname(fullPath);
-  }
-  log.debug("[LicenseScanner.vue] path does not exist, returning null");
-  return null;
-}
+// function getBaseDir(fullPath) {
+//   log.debug(`[LicenseScanner.vue] finding base dir for path "${fullPath}"`);
+//   if (fs.existsSync(fullPath)) {
+//     log.debug("[LicenseScanner.vue] path exists, returning base dir");
+//     let stat = fs.statSync(fullPath);
+//     return stat.isDirectory() ? fullPath : path.dirname(fullPath);
+//   }
+//   log.debug("[LicenseScanner.vue] path does not exist, returning null");
+//   return null;
+// }
 
 function getFileName(fullPath) {
   log.debug(`[LicenseScanner.vue] finding filename for path "${fullPath}"`);
@@ -83,7 +83,12 @@ export default {
     return {
       display: false,
       fileList: null,
-      folderList: null
+      folderList: null,
+      platform: null,
+      redGiantDirPath: null,
+      redGiantDirContents: [],
+      licenseDirPath: null,
+      licenseList: []
     };
   },
   mounted() {
@@ -96,6 +101,20 @@ export default {
 
     log.debug("[LicenseScanner.vue] folder list:");
     log.debug(this.folderList);
+
+    let platform = process.platform;
+    log.debug("[LicenseScanner.vue] platform detected: " + platform);
+    this.platform = platform;
+
+    if (platform == "win32") {
+      log.debug("[LicenseScanner.vue] saving path for Windows");
+      this.redGiantDirPath = path.join("C:", "ProgramData", "Red Giant");
+    } else {
+      log.debug("[LicenseScanner.vue] saving path for Unix");
+      this.redGiantDirPath = path.join(path.sep, "Users", "Shared", "Red Giant");
+    }
+    log.debug(this.redGiantDirPath);
+
   },
   methods: {
     testLicense(data) {
@@ -136,9 +155,10 @@ export default {
           );
         } else {
           log.info("[LicenseScanner] directory using capital 'L'");
-          let directoryFrom = this.getLicenseDirPath();
-          let parentDir = getParentDir(directoryFrom);
-          let directoryTo = path.join(parentDir, "licenses");
+          // let directoryFrom = this.getLicenseDirPath();
+          // let parentDir = getParentDir(directoryFrom);
+          let directoryFrom = path.join(this.redGiantDirPath, "Licenses");
+          let directoryTo = path.join(this.redGiantDirPath, "licenses");
 
           this.addListItemWithRenameButton(
             "folder",
@@ -351,20 +371,20 @@ export default {
     },
     checkSpelling() {
       log.verbose("[LicenseScanner] checking for common spelling mistakes...");
-      let dirPath = this.getLicenseDirPath();
-      let rgDir = getParentDir(dirPath);
-      log.debug(`[LicenseScanner.vue] dirPath: ${dirPath}`);
-      log.debug(`[LicenseScanner.vue] red giant directory: ${rgDir}`);
+      // let dirPath = this.getLicenseDirPath();
+      // let rgDir = getParentDir(dirPath);
+      // log.debug(`[LicenseScanner.vue] dirPath: ${dirPath}`);
+      // log.debug(`[LicenseScanner.vue] red giant directory: ${rgDir}`);
 
       let regex = new RegExp("[L|l]i[c|s]en[c|s]es?$");
       log.debug(`[LicenseScanner.vue] regular expression object:`);
       log.debug(regex);
 
-      let dirContents = fs.readdirSync(rgDir);
-      log.debug("[LicenseScannver.vue] red giant directory contents:");
-      log.debug(dirContents);
+      // // let dirContents = fs.readdirSync(rgDir);
+      // log.debug("[LicenseScannver.vue] red giant directory contents:");
+      // log.debug(dirContents);
 
-      let folder = dirContents.filter(d => regex.test(d));
+      let folder = this.redGiantDirContents.filter(d => regex.test(d));
       log.debug("[LicenseScanner.vue] alternate spelling folders found:");
       log.debug(folder);
 
@@ -374,10 +394,15 @@ export default {
       log.verbose(
         "[LicenseScanner] scanning for files ending with .lic and .config..."
       );
-      let dirPath = this.getLicenseDirPath();
-      let contents = fs.readdirSync(dirPath);
-      log.debug(`[LicenseScanner.vue] dirPath: ${dirPath}`);
-      log.debug("[LicenseScanner.vue] directory contents:");
+      // let dirPath = this.getLicenseDirPath();
+      // let contents = fs.readdirSync(this.redGiantDirPath);
+      // this.redGiantDirContents = contents;
+      // log.debug(`[LicenseScanner.vue] dirPath: ${this.redGiantDirPath}`);
+      // log.debug("[LicenseScanner.vue] directory contents:");
+      // log.debug(contents);
+
+      let contents = fs.readdirSync(this.licenseDirPath);
+      log.debug("[LicenseScanner.vue] license directory contents:");
       log.debug(contents);
 
       if (contents.length == 0) {
@@ -385,30 +410,32 @@ export default {
         return [];
       } else {
         log.verbose("[LicenseScanner] filtering for .lic and .config files...");
-        contents = contents.filter(
-          f => f.endsWith(".lic") || f.endsWith(".config")
-        );
+        let licenseFiles = contents.filter((f) => f.endsWith(".lic") || f.endsWith(".config"));
         log.debug("[LicenseScanner.vue] license files found:");
-        log.debug(contents);
-        return contents;
+        log.debug(licenseFiles);
+        this.licenseList = licenseFiles;
+        return licenseFiles;
       }
     },
     isLowerCase() {
       log.verbose(
         "[LicenseScanner] checking if licenses directory is all lowercase..."
       );
-      let dirPath = this.getLicenseDirPath();
-      let parentDir = getParentDir(dirPath);
-      log.debug(`[LicenseScanner.vue] dirPath: ${dirPath}`);
-      log.debug(`[LicenseScanner.vue] parentDir: ${parentDir}`);
+      // let dirPath = this.getLicenseDirPath();
+      // let parentDir = getParentDir(dirPath);
+      // let redGiantDir = dirPath.split(path.sep);
+      // redGiantDir.pop();
+      // redGiantDir = path.sep + redGiantDir.join(path.sep);
+      // log.debug(`[LicenseScanner.vue] dirPath: ${dirPath}`);
+      // log.debug(`[LicenseScanner.vue] parentDir: ${redGiantDir}`);
 
-      let dirContents = fs.readdirSync(parentDir);
-      log.verbose("[LicenseScanner] reading directory contents...");
-      log.debug("[LicenseScanner.vue] contents:");
-      log.debug(dirContents);
+      // let dirContents = fs.readdirSync(this.redGiantDir);
+      // log.verbose("[LicenseScanner] reading directory contents...");
+      // log.debug("[LicenseScanner.vue] contents:");
+      // log.debug(dirContents);
 
       log.verbose("[LicenseScanner] filtering for 'licenses' directory");
-      dirContents = dirContents.filter(d => d.includes("icenses"));
+      let dirContents = this.redGiantDirContents.filter(d => d.includes("icenses"));
 
       if (dirContents.length >= 1) {
         log.verbose(
@@ -421,30 +448,44 @@ export default {
       }
     },
     defaultDirExists() {
-      let dirPath = this.getLicenseDirPath();
-      return this.dirExists(dirPath);
+      // let dirPath = this.getLicenseDirPath();
+      // let platform = this.getPlatform();
+
+      // if (platform == "win32") {
+      //   return this.dirExists(dirPath);
+      // } else {
+        let regex = new RegExp("[L|l]icenses");
+        // let redGiantDir = path.join(path.sep, "Users", "Shared", "Red Giant");
+        this.redGiantDirContents = fs.readdirSync(this.redGiantDirPath);
+        let contents = this.redGiantDirContents.filter(i => regex.test(i));
+        if (contents.length) {
+          this.licenseDirPath = path.join(this.redGiantDirPath, contents[0]);
+          return true;
+        } else {
+          return false;
+        }
     },
     dirExists(dirPath) {
       return fs.existsSync(dirPath);
     },
-    getLicenseDirPath() {
-      log.verbose(
-        "[LicenseScanner] finding directory path for current platform"
-      );
-      let platform = this.getPlatform();
-      log.debug(`[LicenseScanner.vue] platform detected: ${platform}`);
+    // getLicenseDirPath() {
+    //   log.verbose(
+    //     "[LicenseScanner] finding directory path for current platform"
+    //   );
+    //   let platform = this.getPlatform();
+    //   log.debug(`[LicenseScanner.vue] platform detected: ${platform}`);
 
-      if (platform == "win32") {
-        log.verbose("[LicenseScanner] generating path for Windows");
-        return path.join("C:", "ProgramData", "Red Giant", "licenses");
-      } else {
-        log.verbose("[LicenseScanner] generating path for Unix/Linux/macOS");
-        return path.join("Users", "Shared", "Red Giant", "licenses");
-      }
-    },
-    getPlatform() {
-      return process.platform;
-    }
+    //   if (platform == "win32") {
+    //     log.verbose("[LicenseScanner] generating path for Windows");
+    //     return path.join("C:", "ProgramData", "Red Giant", "licenses");
+    //   } else {
+    //     log.verbose("[LicenseScanner] generating path for Unix/Linux/macOS");
+    //     return path.join("Users", "Shared", "Red Giant", "licenses");
+    //   }
+    // },
+    // getPlatform() {
+    //   return process.platform;
+    // }
   }
 };
 </script>
