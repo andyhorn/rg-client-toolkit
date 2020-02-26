@@ -86,10 +86,14 @@ export default {
       this.redGiantDirPath = path.join("C:", "ProgramData", "Red Giant");
     } else {
       log.debug("[LicenseScanner.vue] saving path for Unix");
-      this.redGiantDirPath = path.join(path.sep, "Users", "Shared", "Red Giant");
+      this.redGiantDirPath = path.join(
+        path.sep,
+        "Users",
+        "Shared",
+        "Red Giant"
+      );
     }
     log.debug(this.redGiantDirPath);
-
   },
   methods: {
     testLicense(data) {
@@ -304,13 +308,15 @@ export default {
             FAILURE_ICON
           );
         }
-        
+
         log.debug(
           "[LicenseScanner.vue] looping through license list and displaying contents"
         );
         for (let license of this.licenseList) {
           log.debug(`[LicenseScanner.vue] reading license file: ${license}`);
-          let lic = this.readLicenseFile(path.join(this.licenseDirPath, license));
+          let lic = this.readLicenseFile(
+            path.join(this.licenseDirPath, license)
+          );
           log.debug("[LicenseScanner.vue] license data:");
           log.debug(lic);
           log.debug("[LicenseScanner.vue] displaying license contents...");
@@ -366,7 +372,9 @@ export default {
         return [];
       } else {
         log.verbose("[LicenseScanner] filtering for .lic and .config files...");
-        let licenseFiles = contents.filter((f) => f.endsWith(".lic") || f.endsWith(".config"));
+        let licenseFiles = contents.filter(
+          f => f.endsWith(".lic") || f.endsWith(".config")
+        );
         log.debug("[LicenseScanner.vue] license files found:");
         log.debug(licenseFiles);
         this.licenseList = licenseFiles;
@@ -379,7 +387,9 @@ export default {
       );
 
       log.verbose("[LicenseScanner] filtering for 'licenses' directory");
-      let dirContents = this.redGiantDirContents.filter(d => d.includes("icenses"));
+      let dirContents = this.redGiantDirContents.filter(d =>
+        d.includes("icenses")
+      );
 
       if (dirContents.length >= 1) {
         log.verbose(
