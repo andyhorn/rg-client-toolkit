@@ -44,13 +44,23 @@ function getPlatform() {
 
 function pathToUtil() {
   let platform = getPlatform();
+  let fileLoc;
   if (platform == "win32") {
+    fileLoc = process.env.NODE_ENV != "production" 
+      ? path.join(__static, "bin", "rgdeploy.exe")
+      : path.join(__static, "..", "rgdeploy.exe");
+
     log.verbose("[SerialRemoval] generating executable path for Windows");
-    return path.join(__static, "bin", "rgdeploy.exe");
+    // return path.join(__static, "..", "src", "assets", "bin", "rgdeploy.exe");
+    // return path;
   } else {
+    fileLoc = process.env.NODE_ENV != "production"
+      ? path.join(__static, "bin", "rgdeploy")
+      : path.join(__static, "..", "rgdeploy");
     log.verbose("[SerialRemoval] generating executable path for Unix/macOS");
-    return path.join(__static, "bin", "rgdeploy");
+    // return path.join(__static, "bin", "rgdeploy");
   }
+  return fileLoc;
 }
 
 export default {

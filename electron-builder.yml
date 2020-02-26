@@ -1,5 +1,7 @@
 appId: "com.redgiant.client-toolkit"
 productName: "Red Giant Client Toolkit"
+extraResources: 
+    - from: "public/bin"
 mac:
     target: "dmg"
     icon: "./src/assets/icons/mac/icon.icns"
