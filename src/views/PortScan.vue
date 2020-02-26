@@ -49,7 +49,5 @@ export default {
 </script>
 
 <style scoped>
-#port-scan {
-  margin-top: 1rem;
-}
+
 </style>

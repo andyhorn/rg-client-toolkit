@@ -1,10 +1,11 @@
 "use strict";
 
-import { app, protocol, BrowserWindow, Menu } from "electron";
+import { app, protocol, BrowserWindow, Menu, screen } from "electron";
 import {
   createProtocol
   /* installVueDevtools */
 } from "vue-cli-plugin-electron-builder/lib";
+import path from "path";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -20,13 +21,19 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 function createWindow() {
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  let icon = path.join(".", "assets", "icons", "png", "icon.png");
+  console.log(icon);
+
   // Create the browser window.
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: width - 200,
+    height: height - 200,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    show: false,
+    icon: icon
   });
 
   const mainMenu = Menu.buildFromTemplate(menuTemplate);
@@ -46,6 +53,10 @@ function createWindow() {
 
   win.on("closed", () => {
     win = null;
+  });
+
+  win.on("ready-to-show", () => {
+    win.show();
   });
 }
 

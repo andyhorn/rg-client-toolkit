@@ -1,21 +1,16 @@
 <template>
   <div id="app">
-    <b-navbar toggleable="md" type="dark" variant="dark">
-      <b-navbar-brand href="#">Red Giant Toolkit</b-navbar-brand>
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-      <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav>
-          <b-nav-item to="/scan">Port Scan</b-nav-item>
-          <b-nav-item to="/license">License Scan</b-nav-item>
-          <b-nav-item to="/create">License Creator</b-nav-item>
-          <b-nav-item to="/serials">Serial Removal</b-nav-item>
-          <b-nav-item to="/options">Other Options</b-nav-item>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
-
-    <router-view />
+    <div class="vertical-nav bg-dark" id="sidebar">
+      <img src="../src/assets/red_giant_on_black.png" id="brand">
+      <router-link to="/scan" active-class="bg-light text-dark border border-dark">Port Scan</router-link>
+      <router-link to="/license" active-class="bg-light text-dark border border-dark">License Scan</router-link>
+      <router-link to="/create" active-class="bg-light text-dark border border-dark">License Creator</router-link>
+      <router-link to="/serials" active-class="bg-light text-dark border border-dark">Serial Removal</router-link>
+      <router-link to="/other" active-class="bg-light text-dark border border-dark">Other Tools</router-link>
+    </div>
+    <div id="view">
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -34,4 +29,48 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+#app {
+  min-width: 500px;
+  min-height: 500px;
+}
+.vertical-nav {
+  width: 10rem;
+  min-width: 10rem;
+  height: 100vh;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+}
+.vertical-nav a {
+  padding: 1rem 0;
+  width: 100%;
+  text-align: right;
+  padding-right: .75rem;
+  margin-top: .05rem;
+  margin-bottom: .05rem;
+  color: #f4e9cd;
+}
+.vertical-nav a:hover {
+  text-decoration: none;
+  color: white;
+  background-color: rgba(0,0,0,0.15);
+}
+.vertical-nav img {
+  width: 100%;
+  padding: 5px;
+  position: absolute;
+  left: 0;
+  top: 5px;
+  border-bottom: 1px solid white;
+}
+#view {
+  padding-left: 11rem;
+  padding-right: 1rem;
+}
+button {
+  border-radius: 0 !important;
+}
+</style>

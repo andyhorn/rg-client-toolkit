@@ -34,8 +34,8 @@ const routes = [
     component: SerialRemoval
   },
   {
-    path: "/options",
-    name: "Options",
+    path: "/other",
+    name: "Other",
     component: Options
   }
 ];
