@@ -13,7 +13,6 @@ export default {
     props: ["serial", "id"],
     methods: {
         remove() {
-            console.log("removing serial " + this.id);
             this.$emit("removeSerial", this.id);
         }
     }

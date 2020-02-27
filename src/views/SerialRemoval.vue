@@ -3,28 +3,25 @@
     <b-row>
       <b-col>
         <h3>Serial Management</h3>
-        <p>
-          There are two different methods of removing serial numbers from this system,
-          depending on how the serial numbers were registered.
-        </p>
       </b-col>
     </b-row>
     <b-row class="pt-5">
       <b-col>
-        <h5 class="text-center">Red Giant Application Manager</h5>
+        <h4>Serial Exclusions</h4>
         <p>
-          These serials cannot be removed, but they can be ignored - Add these serial numbers to the 
-          <strong>Serial Exclusion Form</strong> below.
+          Serials registered through the Red Giant Application Manager cannot be removed, but they can 
+          be added to an exclusion list. Any serials appearing in the form below will not be used by 
+          Red Giant Application Manager.
         </p>
         <SerialExclusionForm />
       </b-col>
     </b-row>
     <b-row class="pt-5">
       <b-col>
-        <h5 class="text-center">Suite Installer or License Panel</h5>
+        <h4>Serial Removal</h4>
         <p>
-          If you entered the serial numbers during the installation or through a licensing panel,
-          you can use the button below to uninstall them.
+          Serials installed prior to Red Giant Application Manager can be removed from the system.<br/>
+          <strong>Note:</strong> This will remove <em>all</em> Red Giant serials installed prior to Red Giant App.
         </p>
         <SerialRemovalForm class="mx-auto" v-on:clean="this.clean" />
       </b-col>
@@ -123,14 +120,12 @@ export default {
             log.info("[SerialRemoval] execution failed");
             this.status = "Failed";
             if (err) {
+              log.error("[SerialRemoval] fatal error:");
               log.error(err);
-              // console.log("fatal error");
-              // console.log(err);
             }
             if (stderr) {
+              log.error("[SerialRemoval] error:");
               log.error(stderr);
-              // console.log("process error");
-              // console.log(stderr);
             }
           } else {
             this.status = "Success!";
@@ -138,8 +133,6 @@ export default {
             if (stdout) {
               log.verbose(`[SerialRemoval] execution output:`);
               log.verbose(stdout);
-              // console.log("success!");
-              // console.log(stdout);
             }
           }
         }
