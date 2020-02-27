@@ -6,8 +6,9 @@
 </template>
 
 <script>
-import fs from "fs";
+// import fs from "fs";
 import log from "../../utils/log";
+import { rename } from "../../utils/file";
 
 export default {
   name: "ConfigFixButton",
@@ -24,7 +25,8 @@ export default {
       log.debug(`[RenameButton.vue] new path: ${this.newPath}`);
       log.verbose("[RenameButton] renaming file...");
       try {
-        fs.renameSync(this.oldPath, this.newPath);
+        // fs.renameSync(this.oldPath, this.newPath);
+        rename(this.oldPath, this.newPath);
         log.verbose("[RenameButton] rename complete!");
         this.$emit("renameComplete");
       } catch (e) {

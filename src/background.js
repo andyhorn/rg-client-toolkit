@@ -1,11 +1,13 @@
 "use strict";
 
-import { app, protocol, BrowserWindow, Menu, screen } from "electron";
+import { app, protocol, BrowserWindow, Menu, screen, ipcMain } from "electron";
 import {
   createProtocol
   /* installVueDevtools */
 } from "vue-cli-plugin-electron-builder/lib";
 import path from "path";
+import url from "url";
+import { fstat } from "fs";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -14,11 +16,41 @@ global.LOG_LEVEL = isDevelopment ? "debug" : "info";
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
+let popup;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } }
 ]);
+
+function createErrorPopup(message, data) {
+  let { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
+  popup = new BrowserWindow({
+    width: 400,
+    height: 300,
+    webPreferences: {
+      nodeIntegration: true
+    },
+    parent: win,
+    frame: false,
+    show: false
+  });
+
+  let pathname = path.join("..", "public", "error.html");
+  console.log(pathname);
+  popup.loadURL(url.format({
+    pathname: pathname,
+    protocol: "file:",
+    slashes: true
+  }));
+
+  popup.once("ready-to-show", () => {
+    popup.show();
+    popup.webContents.send("message", message);
+    popup.webContents.send("data", data);
+  });
+}
 
 function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -209,3 +241,18 @@ function setLogLevel(level) {
   global.LOG_LEVEL = level;
   win.webContents.send("logLevelUpdated");
 }
+
+ipcMain.on("fileWriteError", (e, data) => {
+  createErrorPopup("Unable to write file.<br/>Make sure it is not open in another program and try again.", data);
+});
+
+ipcMain.on("folderRenameError", (e, data) => {
+  createErrorPopup("Unable to rename directory.<br/>Verify no files are open and try again.", data);
+});
+
+ipcMain.on("closeErrorWindow", () => {
+  if (popup) {
+    popup.close();
+  }
+  popup = null;
+})

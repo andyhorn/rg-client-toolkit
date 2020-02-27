@@ -26,7 +26,8 @@
 </template>
 
 <script>
-import fs from "fs";
+// import fs from "fs";
+import File from "../../utils/file";
 import path from "path";
 const { dialog } = require("electron").remote;
 import log from "../../utils/log";
@@ -70,7 +71,8 @@ export default {
       if (chosenPath) {
         log.info("[LicenseCreationForm] license saved!");
         log.debug(`[LicenseCreationForm.vue] path chosen: ${chosenPath}`);
-        fs.writeFileSync(chosenPath, data);
+        File.write(chosenPath, data);
+        // fs.writeFileSync(chosenPath, data);
         log.verbose(`[LicenseCreationForm] file write completed`);
       }
 

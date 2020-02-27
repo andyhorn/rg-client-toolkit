@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <script type="text/javascript" src="/node_modules/jquery/dist/jquery.js"></script>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-dark text-light">
+    <div class="container vh-100 d-flex flex-column justify-content-around">
+        <div id="message"></div>
+        <div id="data"></div>
+        <button class="btn btn-primary" id="closeButton">Ok</button>
+    </div>
+</body>
+<script>
+    window.$ = require("jquery");
+    window.$(document).ready(() => {
+        const { ipcRenderer } = require("electron");
+
+        let btn = document.getElementById("closeButton");
+        btn.addEventListener("click", () => {
+            ipcRenderer.send("closeErrorWindow");
+        });
+
+        let messageBox = document.getElementById("message");
+        let dataBox = document.getElementById("data");
+
+        ipcRenderer.on("message", (e, data) => {
+            messageBox.innerHTML = `<strong>Error</strong><br/><p>${data}</p>`;
+        });
+
+        ipcRenderer.on("data", (e, data) => {
+            console.log(data);
+            let message = `<strong>Directory</strong><br/><p>${data.from}</p>`;
+            dataBox.innerHTML = message;
+        });
+    })
+</script>
+</html>
