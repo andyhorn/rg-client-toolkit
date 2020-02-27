@@ -14,7 +14,10 @@
           appearing in the form below will not be used by Red Giant Application
           Manager.
         </p>
-        <SerialExclusionForm />
+        <ItemListForm
+          v-bind:initialItems="initialSerialExclusionList"
+          v-on:listUpdated="updateSerialExclusions"
+        />
       </b-col>
     </b-row>
     <b-row class="pt-5">
@@ -46,9 +49,10 @@
 <script>
 import SerialRemovalForm from "../components/serials/SerialRemovalForm.vue";
 import SerialRemovalResults from "../components/serials/SerialRemovalResults.vue";
-import SerialExclusionForm from "../components/serials/SerialExclusionForm.vue";
+import ItemListForm from "../components/serials/ItemListForm.vue";
 
 import path from "path";
+import fs from "fs";
 const sudo = require("sudo-prompt");
 import log from "../utils/log";
 
@@ -81,15 +85,23 @@ export default {
   components: {
     SerialRemovalForm,
     SerialRemovalResults,
-    SerialExclusionForm
+    ItemListForm
   },
   data() {
     return {
       platform: null,
       status: null,
       success: null,
-      display: false
+      display: false,
+      serialExclusionList: [],
+      initialSerialExclusionList: [],
+      serialExclusionFile: process.platform == "win32"
+        ? path.join("C:", "ProgramData", "Red Giant", "Red Giant Service", "SerialExclusions.txt")
+        : path.join("Users", "Shared", "Red Giant", "Red Giant Service", "SerialExclusions.txt")
     };
+  },
+  beforeMount() {
+    this.readSerialExclusionFile();
   },
   mounted() {
     log.debug("[SerialRemoval.vue] mounted");
@@ -100,6 +112,8 @@ export default {
       log.debug("[SerialRemoval.vue] setting platform as macOS X");
       this.platform = "macOS";
     }
+
+    this.readSerialExclusionFile();
   },
   methods: {
     clean() {
@@ -142,8 +156,39 @@ export default {
           }
         }
       );
+    },
+    updateSerialExclusions(itemList) {
+      console.log("updating serial exclusion file");
+      console.log(itemList);
+      this.writeSerialExclusionFile(itemList);
+    },
+    readSerialExclusionFile() {
+      if (fs.existsSync(this.serialExclusionFile)) {
+        let data = fs.readFileSync(this.serialExclusionFile, {
+          encoding: "utf-8"
+        });
+        data = data.split("\n");
+
+        for (let item of data) {
+          if (item != "") {
+            console.log(`adding item "${item}" to list`);
+            this.initialSerialExclusionList.push(item);
+          }
+        }
+      }
+    },
+    writeSerialExclusionFile(itemList) {
+      if (itemList.length) {
+        let dataList = itemList.map(i => i.data);
+        let fileData = dataList.join("\n");
+        fs.writeFileSync(this.serialExclusionFile, fileData, {
+          encoding: "utf-8"
+        });
+      } else {
+        fs.unlinkSync(this.serialExclusionFile);
+      }
     }
-  }
+  },
 };
 </script>
 

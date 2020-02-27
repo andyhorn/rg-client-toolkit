@@ -1,7 +1,7 @@
 <template>
   <b-list-group-item>
     <p>
-      {{ this.serial }}
+      {{ this.data }}
       <b-icon-x class="icon" @click="remove"></b-icon-x>
     </p>
   </b-list-group-item>
@@ -9,11 +9,11 @@
 
 <script>
 export default {
-  name: "ExcludedSerial",
-  props: ["serial", "id"],
+  name: "Item",
+  props: ["data", "id"],
   methods: {
     remove() {
-      this.$emit("removeSerial", this.id);
+      this.$emit("removeItem", this.id);
     }
   }
 };
