@@ -9,21 +9,37 @@
         </p>
       </b-col>
     </b-row>
-    <b-row class="flex">
-      <div>
+    <b-row class="text-center">
+      <b-col>
         <h5>Render Only</h5>
         <OptionsSwitch
           :isSet="this.isRenderOnly"
           v-on:valueChanged="this.setRenderOnly"
         />
-      </div>
-      <div>
+      </b-col>
+      <b-col>
         <h5>Client Logging</h5>
         <OptionsSwitch
           :isSet="this.hasClientLogging"
           v-on:valueChanged="this.setClientLogging"
         />
-      </div>
+      </b-col>
+    </b-row>
+    <b-row class="text-center pt-5">
+      <b-col>
+        <h5>Ignore Universe Subscription</h5>
+        <OptionsSwitch
+          :isSet="ignoreFlags.universe"
+          v-on:valueChanged="setIgnoreUniverse"
+        />
+      </b-col>
+      <b-col>
+        <h5>Ignore Red Giant Complete Subscription</h5>
+        <OptionsSwitch
+          :isSet="ignoreFlags.complete"
+          v-on:valueChanged="setIgnoreComplete"
+        />
+      </b-col>
     </b-row>
   </b-container>
 </template>
@@ -53,7 +69,14 @@ export default {
   data() {
     return {
       isRenderOnly: false,
-      hasClientLogging: false
+      hasClientLogging: false,
+      ignoreFlags: {
+        complete: false,
+        universe: false
+      },
+      exclusionFilePath: process.platform == "win32"
+        ? path.join("C:", "ProgramData", "Red Giant", "Red Giant Service", "SubscriptionExclusions.txt")
+        : path.join("Users", "Shared", "Red Giant", "Red Giant Service", "SubscriptionExclusions.txt")
     };
   },
   beforeMount() {
@@ -72,6 +95,18 @@ export default {
       this.hasClientLogging = val;
       log.debug("[Options.vue] updating file");
       this.updateFile();
+    },
+    setIgnoreUniverse(val) {
+      log.debug(`[Options.vue] setting universe ignore to: ${val}`);
+      this.ignoreFlags.universe = val;
+      log.debug("[Options.vue] updating exclusions file");
+      this.updateExclusions();
+    },
+    setIgnoreComplete(val) {
+      log.debug(`[Options.vue] setting complete ignore to: ${val}`);
+      this.ignoreFlags.complete = val;
+      log.debug("[Options.vue] updating exclusions file");
+      this.updateExclusions();
     },
     updateFile() {
       log.verbose("[Options] updating options file");
@@ -114,6 +149,26 @@ export default {
             this.isRenderOnly = line.endsWith("true");
           }
         }
+      }
+    },
+    updateExclusions() {
+      if (this.ignoreFlags.universe == false && this.ignoreFlags.complete == false) {
+        fs.unlinkSync(this.exclusionFilePath);
+      } else if (this.ignoreFlags.universe && this.ignoreFlags.complete) {
+        let data = "redgiant.stream.universe\nredgiant.stream.complete";
+        fs.writeFileSync(this.exclusionFilePath, data, {
+          encoding: "utf-8"
+        });
+      } else if (this.ignoreFlags.complete) {
+        let data = "redgiant.stream.complete";
+        fs.writeFileSync(this.exclusionFilePath, data, {
+          encoding: "utf-8"
+        });
+      } else if (this.ignoreFlags.universe) {
+        let data = "redgiant.stream.universe";
+        fs.writeFileSync(this.exclusionFilePath, data, {
+          encoding: "utf-8"
+        });
       }
     }
   }
