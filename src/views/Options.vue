@@ -45,17 +45,6 @@ import path from "path";
 import fs from "fs";
 import log from "../utils/log";
 
-function getOptionsFilePath() {
-  log.verbose("[Options] generating executable path for current platform...");
-  if (process.platform == "win32") {
-    log.verbose("[Options] using Windows platform");
-    return path.join("C:", "ProgramData", "Red Giant", "licenses");
-  } else {
-    log.verbose("[Options] using macOS/Unix/Linux platform");
-    return path.join("Users", "Shared", "Red Giant", "licenses");
-  }
-}
-
 export default {
   name: "Options",
   components: {
@@ -69,6 +58,9 @@ export default {
         complete: false,
         universe: false
       },
+      optionsFilePath: process.platform == "win32"
+        ? path.join("C:", "ProgramData", "Red Giant", "licenses", "rlm-options.txt")
+        : path.join(path.sep, "Users", "Shared", "Red Giant", "licenses", "rlm-options.txt"),
       exclusionFilePath:
         process.platform == "win32"
           ? path.join(
@@ -79,6 +71,7 @@ export default {
               "SubscriptionExclusions.txt"
             )
           : path.join(
+              path.sep,
               "Users",
               "Shared",
               "Red Giant",
@@ -119,8 +112,7 @@ export default {
     },
     updateFile() {
       log.verbose("[Options] updating options file");
-      let filename = path.join(getOptionsFilePath(), "rlm-options.txt");
-      log.debug(`[Options.vue] filename: ${filename}`);
+      log.debug(`[Options.vue] filename: ${this.optionsFilePath}`);
       let data = "";
 
       log.verbose("[Options] generating file data...");
@@ -135,16 +127,15 @@ export default {
       log.debug(data);
 
       log.debug("[Options.vue] writing data to file");
-      fs.writeFileSync(filename, data);
+      fs.writeFileSync(this.optionsFilePath, data);
     },
     readOptions() {
       log.verbose("[Options] reading file data...");
-      let filename = path.join(getOptionsFilePath(), "rlm-options.txt");
-      log.debug(`[Options.vue] filename: ${filename}`);
+      log.debug(`[Options.vue] filename: ${this.optionsFilePath}`);
 
-      if (fs.existsSync(filename)) {
+      if (fs.existsSync(this.optionsFilePath)) {
         log.verbose("[Options] file found, reading...");
-        let data = fs.readFileSync(filename, {
+        let data = fs.readFileSync(this.optionsFilePath, {
           encoding: "utf-8"
         });
         log.debug("[Options.vue] file data:");
