@@ -9,9 +9,10 @@
       <b-col>
         <h4>Serial Exclusions</h4>
         <p>
-          Serials registered through the Red Giant Application Manager cannot be removed, but they can 
-          be added to an exclusion list. Any serials appearing in the form below will not be used by 
-          Red Giant Application Manager.
+          Serials registered through the Red Giant Application Manager cannot be
+          removed, but they can be added to an exclusion list. Any serials
+          appearing in the form below will not be used by Red Giant Application
+          Manager.
         </p>
         <SerialExclusionForm />
       </b-col>
@@ -20,8 +21,10 @@
       <b-col>
         <h4>Serial Removal</h4>
         <p>
-          Serials installed prior to Red Giant Application Manager can be removed from the system.<br/>
-          <strong>Note:</strong> This will remove <em>all</em> Red Giant serials installed prior to Red Giant App.
+          Serials installed prior to Red Giant Application Manager can be
+          removed from the system.<br />
+          <strong>Note:</strong> This will remove <em>all</em> Red Giant serials
+          installed prior to Red Giant App.
         </p>
         <SerialRemovalForm class="mx-auto" v-on:clean="this.clean" />
       </b-col>
@@ -57,15 +60,17 @@ function pathToUtil() {
   let platform = getPlatform();
   let fileLoc;
   if (platform == "win32") {
-    fileLoc = process.env.NODE_ENV != "production" 
-      ? path.join(__static, "bin", "rgdeploy.exe")
-      : path.join(__static, "..", "rgdeploy.exe");
+    fileLoc =
+      process.env.NODE_ENV != "production"
+        ? path.join(__static, "bin", "rgdeploy.exe")
+        : path.join(__static, "..", "rgdeploy.exe");
 
     log.verbose("[SerialRemoval] generating executable path for Windows");
   } else {
-    fileLoc = process.env.NODE_ENV != "production"
-      ? path.join(__static, "bin", "rgdeploy")
-      : path.join(__static, "..", "rgdeploy");
+    fileLoc =
+      process.env.NODE_ENV != "production"
+        ? path.join(__static, "bin", "rgdeploy")
+        : path.join(__static, "..", "rgdeploy");
     log.verbose("[SerialRemoval] generating executable path for Unix/macOS");
   }
   return fileLoc;

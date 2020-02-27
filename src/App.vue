@@ -5,23 +5,28 @@
       <router-link
         to="/scan"
         active-class="bg-light text-dark border-right border-dark"
-        >Port Scan</router-link>
+        >Port Scan</router-link
+      >
       <router-link
         to="/license"
         active-class="bg-light text-dark border-right border-dark"
-        >License Scan</router-link>
+        >License Scan</router-link
+      >
       <router-link
         to="/create"
         active-class="bg-light text-dark border-right border-dark"
-        >License Creator</router-link>
+        >License Creator</router-link
+      >
       <router-link
         to="/serials"
         active-class="bg-light text-dark border-right border-dark"
-        >Serial Management</router-link>
+        >Serial Management</router-link
+      >
       <router-link
         to="/other"
         active-class="bg-light text-dark border-right border-dark"
-        >Other Tools</router-link>
+        >Other Tools</router-link
+      >
     </div>
     <div id="view">
       <router-view />
