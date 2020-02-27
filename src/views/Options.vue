@@ -15,14 +15,18 @@
               v-on:valueChanged="this.setRenderOnly"
             />
           </b-list-group-item>
-          <b-list-group-item v-bind:class="ignoreFlags.universe ? 'shadow my-2' : ''">
+          <b-list-group-item
+            v-bind:class="ignoreFlags.universe ? 'shadow my-2' : ''"
+          >
             <h5>Ignore Universe Subscription</h5>
             <OptionsSwitch
               :isSet="this.ignoreFlags.universe"
               v-on:valueChanged="this.setIgnoreUniverse"
             />
           </b-list-group-item>
-          <b-list-group-item v-bind:class="ignoreFlags.complete ? 'shadow my-2' : ''">
+          <b-list-group-item
+            v-bind:class="ignoreFlags.complete ? 'shadow my-2' : ''"
+          >
             <h5>Ignore Red Giant Complete Subscription</h5>
             <OptionsSwitch
               :isSet="this.ignoreFlags.complete"
@@ -65,9 +69,22 @@ export default {
         complete: false,
         universe: false
       },
-      exclusionFilePath: process.platform == "win32"
-        ? path.join("C:", "ProgramData", "Red Giant", "Red Giant Service", "SubscriptionExclusions.txt")
-        : path.join("Users", "Shared", "Red Giant", "Red Giant Service", "SubscriptionExclusions.txt")
+      exclusionFilePath:
+        process.platform == "win32"
+          ? path.join(
+              "C:",
+              "ProgramData",
+              "Red Giant",
+              "Red Giant Service",
+              "SubscriptionExclusions.txt"
+            )
+          : path.join(
+              "Users",
+              "Shared",
+              "Red Giant",
+              "Red Giant Service",
+              "SubscriptionExclusions.txt"
+            )
     };
   },
   beforeMount() {
@@ -144,7 +161,10 @@ export default {
       }
     },
     updateExclusions() {
-      if (this.ignoreFlags.universe == false && this.ignoreFlags.complete == false) {
+      if (
+        this.ignoreFlags.universe == false &&
+        this.ignoreFlags.complete == false
+      ) {
         fs.unlinkSync(this.exclusionFilePath);
       } else if (this.ignoreFlags.universe && this.ignoreFlags.complete) {
         let data = "redgiant.stream.universe\nredgiant.stream.complete";

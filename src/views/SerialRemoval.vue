@@ -95,9 +95,22 @@ export default {
       display: false,
       serialExclusionList: [],
       initialSerialExclusionList: [],
-      serialExclusionFile: process.platform == "win32"
-        ? path.join("C:", "ProgramData", "Red Giant", "Red Giant Service", "SerialExclusions.txt")
-        : path.join("Users", "Shared", "Red Giant", "Red Giant Service", "SerialExclusions.txt")
+      serialExclusionFile:
+        process.platform == "win32"
+          ? path.join(
+              "C:",
+              "ProgramData",
+              "Red Giant",
+              "Red Giant Service",
+              "SerialExclusions.txt"
+            )
+          : path.join(
+              "Users",
+              "Shared",
+              "Red Giant",
+              "Red Giant Service",
+              "SerialExclusions.txt"
+            )
     };
   },
   beforeMount() {
@@ -158,8 +171,6 @@ export default {
       );
     },
     updateSerialExclusions(itemList) {
-      console.log("updating serial exclusion file");
-      console.log(itemList);
       this.writeSerialExclusionFile(itemList);
     },
     readSerialExclusionFile() {
@@ -171,7 +182,6 @@ export default {
 
         for (let item of data) {
           if (item != "") {
-            console.log(`adding item "${item}" to list`);
             this.initialSerialExclusionList.push(item);
           }
         }
@@ -188,7 +198,7 @@ export default {
         fs.unlinkSync(this.serialExclusionFile);
       }
     }
-  },
+  }
 };
 </script>
 

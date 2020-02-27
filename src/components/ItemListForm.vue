@@ -6,7 +6,7 @@
         <b-button variant="primary" type="submit">Add</b-button>
       </b-input-group>
     </b-form>
-    <b-list-group 
+    <b-list-group
       class="d-flex flex-row flex-wrap"
       v-bind:class="itemList.length > 0 ? 'p-1 mt-3 border' : ''"
     >
@@ -41,7 +41,7 @@ export default {
   },
   mounted() {
     log.debug("[ItemListForm.vue] view mounted");
-    
+
     for (let item of this.initialItems) {
       let newItem = {
         data: item,
