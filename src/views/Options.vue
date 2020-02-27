@@ -3,42 +3,33 @@
     <b-row>
       <b-col>
         <h3>Other Options</h3>
-        <p>
-          Manage your miscellaneous options on this machine, including toggling
-          client logging and the "Render Only" status.
-        </p>
       </b-col>
     </b-row>
-    <b-row class="text-center">
+    <b-row>
       <b-col>
-        <h5>Render Only</h5>
-        <OptionsSwitch
-          :isSet="this.isRenderOnly"
-          v-on:valueChanged="this.setRenderOnly"
-        />
-      </b-col>
-      <b-col>
-        <h5>Client Logging</h5>
-        <OptionsSwitch
-          :isSet="this.hasClientLogging"
-          v-on:valueChanged="this.setClientLogging"
-        />
-      </b-col>
-    </b-row>
-    <b-row class="text-center pt-5">
-      <b-col>
-        <h5>Ignore Universe Subscription</h5>
-        <OptionsSwitch
-          :isSet="ignoreFlags.universe"
-          v-on:valueChanged="setIgnoreUniverse"
-        />
-      </b-col>
-      <b-col>
-        <h5>Ignore Red Giant Complete Subscription</h5>
-        <OptionsSwitch
-          :isSet="ignoreFlags.complete"
-          v-on:valueChanged="setIgnoreComplete"
-        />
+        <b-list-group>
+          <b-list-group-item v-bind:class="isRenderOnly ? 'shadow my-2' : ''">
+            <h5>Render Only Machine</h5>
+            <OptionsSwitch
+              :isSet="this.isRenderOnly"
+              v-on:valueChanged="this.setRenderOnly"
+            />
+          </b-list-group-item>
+          <b-list-group-item v-bind:class="ignoreFlags.universe ? 'shadow my-2' : ''">
+            <h5>Ignore Universe Subscription</h5>
+            <OptionsSwitch
+              :isSet="this.ignoreFlags.universe"
+              v-on:valueChanged="this.setIgnoreUniverse"
+            />
+          </b-list-group-item>
+          <b-list-group-item v-bind:class="ignoreFlags.complete ? 'shadow my-2' : ''">
+            <h5>Ignore Red Giant Complete Subscription</h5>
+            <OptionsSwitch
+              :isSet="this.ignoreFlags.complete"
+              v-on:valueChanged="this.setIgnoreComplete"
+            />
+          </b-list-group-item>
+        </b-list-group>
       </b-col>
     </b-row>
   </b-container>
@@ -82,6 +73,7 @@ export default {
   beforeMount() {
     log.debug("[Options.vue] reading options file before view mounts");
     this.readOptions();
+    this.readExclusions();
   },
   methods: {
     setRenderOnly(val) {
@@ -170,20 +162,30 @@ export default {
           encoding: "utf-8"
         });
       }
+    },
+    readExclusions() {
+      if (fs.existsSync(this.exclusionFilePath)) {
+        let data = fs.readFileSync(this.exclusionFilePath, {
+          encoding: "utf-8"
+        });
+
+        let lines = data.split("\n");
+        for (let line of lines) {
+          if (line == "redgiant.stream.complete") {
+            this.ignoreFlags.complete = true;
+          } else if (line == "redgiant.stream.universe") {
+            this.ignoreFlags.universe = true;
+          }
+        }
+      }
     }
   }
 };
 </script>
 
 <style scoped>
-.flex {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.flex > div {
-  margin: 0 auto;
-  text-align: center;
+.list-group-item {
+  margin: 5px 0;
+  transition: all 0.25s;
 }
 </style>
