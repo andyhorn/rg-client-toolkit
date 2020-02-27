@@ -39,8 +39,6 @@ function createWindow() {
   const mainMenu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(mainMenu);
 
-  // win.setTitle("Red Giant Client Toolkit");
-
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
@@ -138,7 +136,7 @@ const menuTemplate = [
             }
           },
           {
-            label: "Serial Removal",
+            label: "Serial Management",
             click() {
               win.webContents.send("navTo", "serials");
             }
