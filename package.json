@@ -1,7 +1,10 @@
 {
   "name": "red-giant-client-toolkit",
   "description": "A suite of utilities for managing Red Giant client settings",
-  "author": {"email": "andyjhorn@gmail.com", "name": "Andy Horn"},
+  "author": {
+    "email": "andyjhorn@gmail.com",
+    "name": "Andy Horn"
+  },
   "version": "1.3.0",
   "private": true,
   "scripts": {
@@ -22,6 +25,7 @@
     "jquery": "^3.4.1",
     "popper.js": "^1.16.1",
     "sudo-prompt": "^9.1.1",
+    "uuid": "^7.0.1",
     "vue": "^2.6.11",
     "vue-router": "^3.1.5"
   },

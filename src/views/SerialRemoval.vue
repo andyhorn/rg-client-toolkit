@@ -4,20 +4,32 @@
       <b-col>
         <h3>Serial Management</h3>
         <p>
-          If you used serial numbers in the past and would like to remove them
-          from this machine, click the button below.
-        </p>
-        <p>
-          Note: This will not work with serials installed through the Red Giant
-          Application Manager.
+          There are two different methods of removing serial numbers from this system,
+          depending on how the serial numbers were registered.
         </p>
       </b-col>
     </b-row>
-    <b-row>
+    <b-row class="pt-5">
       <b-col>
-        <SerialRemovalForm v-on:clean="this.clean" />
+        <h5 class="text-center">Red Giant Application Manager</h5>
+        <p>
+          These serials cannot be removed, but they can be ignored - Add these serial numbers to the 
+          <strong>Serial Exclusion Form</strong> below.
+        </p>
+        <SerialExclusionForm />
       </b-col>
     </b-row>
+    <b-row class="pt-5">
+      <b-col>
+        <h5 class="text-center">Suite Installer or License Panel</h5>
+        <p>
+          If you entered the serial numbers during the installation or through a licensing panel,
+          you can use the button below to uninstall them.
+        </p>
+        <SerialRemovalForm class="mx-auto" v-on:clean="this.clean" />
+      </b-col>
+    </b-row>
+
     <b-row class="pt-3">
       <b-col>
         <SerialRemovalResults
@@ -34,6 +46,8 @@
 <script>
 import SerialRemovalForm from "../components/serials/SerialRemovalForm.vue";
 import SerialRemovalResults from "../components/serials/SerialRemovalResults.vue";
+import SerialExclusionForm from "../components/serials/SerialExclusionForm.vue";
+
 import path from "path";
 const sudo = require("sudo-prompt");
 import log from "../utils/log";
@@ -51,14 +65,11 @@ function pathToUtil() {
       : path.join(__static, "..", "rgdeploy.exe");
 
     log.verbose("[SerialRemoval] generating executable path for Windows");
-    // return path.join(__static, "..", "src", "assets", "bin", "rgdeploy.exe");
-    // return path;
   } else {
     fileLoc = process.env.NODE_ENV != "production"
       ? path.join(__static, "bin", "rgdeploy")
       : path.join(__static, "..", "rgdeploy");
     log.verbose("[SerialRemoval] generating executable path for Unix/macOS");
-    // return path.join(__static, "bin", "rgdeploy");
   }
   return fileLoc;
 }
@@ -67,7 +78,8 @@ export default {
   name: "SerialRemoval",
   components: {
     SerialRemovalForm,
-    SerialRemovalResults
+    SerialRemovalResults,
+    SerialExclusionForm
   },
   data() {
     return {
