@@ -25,9 +25,7 @@
 
 <script>
 import { v4 as uuidv4 } from "uuid";
-// import path from "path";
-// import fs from "fs";
-import log from "../../utils/log";
+import log from "../utils/log";
 import Item from "./Item.vue";
 
 export default {
@@ -38,10 +36,7 @@ export default {
   props: ["initialItems"],
   data() {
     return {
-      itemList: [],
-      // exclusionFilePath: null,
-      // exclusionFileName: "SerialExclusions.txt",
-      // filePath: null
+      itemList: []
     };
   },
   mounted() {

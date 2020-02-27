@@ -49,7 +49,7 @@
 <script>
 import SerialRemovalForm from "../components/serials/SerialRemovalForm.vue";
 import SerialRemovalResults from "../components/serials/SerialRemovalResults.vue";
-import ItemListForm from "../components/serials/ItemListForm.vue";
+import ItemListForm from "../components/ItemListForm";
 
 import path from "path";
 import fs from "fs";
