@@ -32,7 +32,6 @@
         });
 
         ipcRenderer.on("data", (e, data) => {
-            console.log(data);
             let message = `<strong>Directory</strong><br/><p>${data.from}</p>`;
             dataBox.innerHTML = message;
         });

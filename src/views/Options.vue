@@ -58,9 +58,23 @@ export default {
         complete: false,
         universe: false
       },
-      optionsFilePath: process.platform == "win32"
-        ? path.join("C:", "ProgramData", "Red Giant", "licenses", "rlm-options.txt")
-        : path.join(path.sep, "Users", "Shared", "Red Giant", "licenses", "rlm-options.txt"),
+      optionsFilePath:
+        process.platform == "win32"
+          ? path.join(
+              "C:",
+              "ProgramData",
+              "Red Giant",
+              "licenses",
+              "rlm-options.txt"
+            )
+          : path.join(
+              path.sep,
+              "Users",
+              "Shared",
+              "Red Giant",
+              "licenses",
+              "rlm-options.txt"
+            ),
       exclusionFilePath:
         process.platform == "win32"
           ? path.join(

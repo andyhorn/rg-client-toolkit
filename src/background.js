@@ -7,7 +7,6 @@ import {
 } from "vue-cli-plugin-electron-builder/lib";
 import path from "path";
 import url from "url";
-import { fstat } from "fs";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -24,8 +23,6 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 function createErrorPopup(message, data) {
-  let { width, height } = screen.getPrimaryDisplay().workAreaSize;
-
   popup = new BrowserWindow({
     width: 400,
     height: 300,
@@ -39,11 +36,13 @@ function createErrorPopup(message, data) {
 
   let pathname = path.join("..", "public", "error.html");
   console.log(pathname);
-  popup.loadURL(url.format({
-    pathname: pathname,
-    protocol: "file:",
-    slashes: true
-  }));
+  popup.loadURL(
+    url.format({
+      pathname: pathname,
+      protocol: "file:",
+      slashes: true
+    })
+  );
 
   popup.once("ready-to-show", () => {
     popup.show();
@@ -243,11 +242,17 @@ function setLogLevel(level) {
 }
 
 ipcMain.on("fileWriteError", (e, data) => {
-  createErrorPopup("Unable to write file.<br/>Make sure it is not open in another program and try again.", data);
+  createErrorPopup(
+    "Unable to write file.<br/>Make sure it is not open in another program and try again.",
+    data
+  );
 });
 
 ipcMain.on("folderRenameError", (e, data) => {
-  createErrorPopup("Unable to rename directory.<br/>Verify no files are open and try again.", data);
+  createErrorPopup(
+    "Unable to rename directory.<br/>Verify no files are open and try again.",
+    data
+  );
 });
 
 ipcMain.on("closeErrorWindow", () => {
@@ -255,4 +260,4 @@ ipcMain.on("closeErrorWindow", () => {
     popup.close();
   }
   popup = null;
-})
+});
