@@ -1,7 +1,7 @@
 <template>
   <b-list-group-item>
     <p>
-      {{ this.data }}
+      {{ data }}
       <b-icon-x class="icon" @click="remove"></b-icon-x>
     </p>
   </b-list-group-item>

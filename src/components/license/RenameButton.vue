@@ -19,21 +19,14 @@ export default {
     };
   },
   methods: {
+    // Attempts to rename the license file to end with ".lic"
     fix() {
       log.verbose("[RenameButton] button click detected");
       log.debug(`[RenameButton.vue] old path: ${this.oldPath}`);
       log.debug(`[RenameButton.vue] new path: ${this.newPath}`);
       log.verbose("[RenameButton] renaming file...");
-      try {
-        // fs.renameSync(this.oldPath, this.newPath);
-        rename(this.oldPath, this.newPath);
-        log.verbose("[RenameButton] rename complete!");
+      if (rename(this.oldPath, this.newPath)) {
         this.$emit("renameComplete");
-      } catch (e) {
-        log.error("RenameButton.vue] unable to rename directory, error:");
-        if (e.code == "EBUSY") {
-          this.error = "Error: Close open files, then try again.";
-        }
       }
     }
   }

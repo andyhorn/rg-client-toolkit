@@ -8,14 +8,14 @@
     </b-form>
     <b-list-group
       class="d-flex flex-row flex-wrap"
-      v-bind:class="itemList.length > 0 ? 'p-1 mt-3 border' : ''"
+      :class="itemList.length > 0 ? 'p-1 mt-3 border' : ''"
     >
       <Item
         v-for="item in itemList"
-        v-bind:key="item.id"
-        v-bind:data="item.data"
-        v-bind:id="item.id"
-        v-on:removeItem="removeItem"
+        :key="item.id"
+        :data="item.data"
+        :id="item.id"
+        @removeItem="removeItem"
         class="m-1"
       >
       </Item>

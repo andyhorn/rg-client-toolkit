@@ -1,7 +1,7 @@
 <template>
   <div>
     <h5>{{ title }}</h5>
-    <b-list-group v-bind:ref="ref"> </b-list-group>
+    <b-list-group :ref="ref"> </b-list-group>
   </div>
 </template>
 

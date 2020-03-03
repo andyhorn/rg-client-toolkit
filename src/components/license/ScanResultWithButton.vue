@@ -10,7 +10,7 @@
       <RenameButton
         :oldPath="from"
         :newPath="to"
-        v-on:renameComplete="rescan"
+        @renameComplete="rescan"
       />
     </div>
   </b-list-group-item>

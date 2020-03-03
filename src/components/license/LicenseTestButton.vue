@@ -17,6 +17,7 @@ export default {
   name: "LicenseTestButton",
   props: ["host", "port"],
   methods: {
+    // Emits a "test" event containing the license data
     testMe() {
       log.verbose("[LicenseTestButton] button click detected");
       let data = { host: this.host, port: this.port };

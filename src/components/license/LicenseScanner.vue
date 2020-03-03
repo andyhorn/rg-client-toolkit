@@ -33,6 +33,9 @@ const FAILURE = "text-danger";
 const SUCCESS_ICON = "check";
 const FAILURE_ICON = "alert-triangle";
 
+// Attempts to pull the filename from a full path using the "fs" utility.
+// Will check that the path exists and that it is a file; otherwise returns
+// null. 
 function getFileName(fullPath) {
   log.debug(`[LicenseScanner.vue] finding filename for path "${fullPath}"`);
   if (!fs.existsSync(fullPath)) {
@@ -56,191 +59,173 @@ export default {
   name: "LicenseScanner",
   data() {
     return {
+      // flag for controlling the display of the results section
       display: false,
-      fileList: null,
-      folderList: null,
-      platform: null,
-      redGiantDirPath: null,
+      // the full filepath for the "Red Giant" directory
+      redGiantDirPath: process.platform == "win32"
+        ? path.join("C:", "ProgramData", "Red Giant")
+        : path.join(path.sep, "Users", "Shared", "Red Giant"),
+      // holds a list of subdirectories and files of the "Red Giant" directory
       redGiantDirContents: [],
+      // the full filepath of the "licenses" directory
       licenseDirPath: null,
+      // holds a list of license files in the "licenses" directory
       licenseList: []
     };
   },
   mounted() {
     log.debug("[LicenseScanner.vue] page mounted");
-    this.fileList = this.$refs.file;
-    this.folderList = this.$refs.folder;
 
-    log.debug("[LicenseScanner.vue] file list:");
-    log.debug(this.fileList);
+    // format the "licenses" path
+    this.licenseDirPath = path.join(this.redGiantDirPath, "licenses");
 
-    log.debug("[LicenseScanner.vue] folder list:");
-    log.debug(this.folderList);
-
-    let platform = process.platform;
-    log.debug("[LicenseScanner.vue] platform detected: " + platform);
-    this.platform = platform;
-
-    if (platform == "win32") {
-      log.debug("[LicenseScanner.vue] saving path for Windows");
-      this.redGiantDirPath = path.join("C:", "ProgramData", "Red Giant");
-    } else {
-      log.debug("[LicenseScanner.vue] saving path for Unix");
-      this.redGiantDirPath = path.join(
-        path.sep,
-        "Users",
-        "Shared",
-        "Red Giant"
-      );
+    // if the Red Giant directory exists, read its contents
+    if (fs.existsSync(this.redGiantDirPath)) {
+      this.redGiantDirContents = fs.readdirSync(this.redGiantDirPath);
     }
-    log.debug(this.redGiantDirPath);
   },
   methods: {
+    findLicenseFiles() {
+      console.log(this.licenseDirPath)
+      if (fs.existsSync(this.licenseDirPath)) {
+        let contents = fs.readdirSync(this.licenseDirPath);
+        console.log(contents)
+        this.licenseList = contents.filter(i => i.endsWith(".lic") || i.endsWith(".config"));
+        console.log(this.licenseList);
+      }
+    },
+    // send the license data to be used in the port scan utility
     testLicense(data) {
       log.debug(
         "[LicenseScanner.vue] license test button detected, emitting to parent"
       );
       this.$emit("testLicense", data);
     },
+    // remove any existing result information
     clearResults() {
       log.verbose("[LicenseScanner] clearing any current result data");
       this.display = false;
       this.$refs.file.innerHTML = "";
       this.$refs.folder.innerHTML = "";
     },
+    // perform a scan for Red Giant license files
     scan() {
       log.info("[LicenseScanner] beginning scan...");
+
+      // clear any existing results
       this.clearResults();
 
+      // scan for license files (ending in .lic or .config)
+      this.findLicenseFiles();
+
+      // set display to true
       log.debug("[LicenseScanner.vue] setting display property to true");
       this.display = true;
 
-      if (this.defaultDirExists()) {
+      // check that the licenses directory exists, display an error message
+      // if it cannot be found
+      if (fs.existsSync(this.licenseDirPath)) {
         log.info("[LicenseScanner] default directory found");
-        this.addListItem(
-          "folder",
-          "License directory found!",
-          SUCCESS,
-          SUCCESS_ICON
-        );
+        let options = {
+          ref: "folder",
+          content: "License directory found!",
+          color: SUCCESS,
+          icon: SUCCESS_ICON
+        };
+        this.addListItem(options);
 
+        // check for lowercase "l" or capital "L" in the licenses directory
         if (this.isLowerCase()) {
           log.info("[LicenseScanner] directory using lowercase");
-          this.addListItem(
-            "folder",
-            'Uses lowercase "licenses"',
-            SUCCESS,
-            SUCCESS_ICON
-          );
+          let options = {
+            ref: "folder",
+            content: "Uses lowercase",
+            color: SUCCESS,
+            icon: SUCCESS_ICON
+          };
+          this.addListItem(options);
         } else {
+          // if a capital "L" was used, prepare to rename to a lowercase "l"
           log.info("[LicenseScanner] directory using capital 'L'");
           let directoryFrom = path.join(this.redGiantDirPath, "Licenses");
           let directoryTo = path.join(this.redGiantDirPath, "licenses");
 
-          this.addListItemWithRenameButton(
-            "folder",
-            'Folder uses capital "L", please change to lowercase',
-            FAILURE,
-            FAILURE_ICON,
+          let options = {
+            ref: "folder",
+            content: "Folder uses capital 'L', please change to lowercase",
+            color: FAILURE,
+            icon: FAILURE_ICON,
             directoryFrom,
             directoryTo
-          );
+          };
+
+          this.addListItem(options);
         }
 
-        log.info("[LicenseScanner] scanning for all license files...");
-        let files = this.getLicenseFiles();
-
-        if (files) {
-          log.info("[LicenseScanner] files found: " + files.length);
+        // if license files were found, read and display them to the user
+        if (this.licenseList.length) {
+          log.info("[LicenseScanner] files found: " + this.licenseList.length);
           log.verbose("[LicenseScanner] displaying license files");
-          this.displayLicenses(files);
+          // display each of the license files
+          this.displayLicenses(this.licenseList);
         } else {
           log.info("[LicenseScanner] no license files detected");
         }
       } else {
         log.info("[LicenseScanner] licenses directory not found");
-        this.addListItem(
-          "folder",
-          "License directory not found",
-          FAILURE,
-          FAILURE_ICON
-        );
+        let options = {
+          ref: "folder",
+          content: "License directory not found",
+          color: FAILURE,
+          icon: FAILURE_ICON
+        };
+        this.addListItem(options);
 
+        // if the licenses directory wasn't found, check for common misspellings
         if (this.checkSpelling()) {
           log.info("[LicenseScanner] possible misspelled folder found");
-          this.addListItem(
-            "folder",
-            'License folder misspelled, please change to "licenses"',
-            FAILURE,
-            FAILURE_ICON
-          );
+          let options = {
+            ref: "folder",
+            content: "License folder misspelled, please change to 'licenses'",
+            color: FAILURE,
+            icon: FAILURE_ICON
+          };
+          this.addListItem(options);
         }
       }
     },
-    addListItem(ref, content, color, icon) {
-      log.verbose("[LicenseScanner] adding list item...");
-      log.debug(`[LicenseScanner.vue] ref: ${ref}`);
-      log.debug(`[LicenseScanner.vue] content: ${content}`);
-      log.debug(`[LicenseScanner.vue] color: ${color}`);
-      log.debug(`[LicenseScanner.vue] icon: ${icon}`);
+    addListItem(options) {
+      let component;
+      if (options.renameFrom && options.renameTo) {
+        component = Vue.extend(ScanResultWithButton);
+      } else {
+        component = Vue.extend(ScanResult);
+      }
 
-      let component = Vue.extend(ScanResult);
+      let propsData = {
+        text: options.content,
+        color: options.color,
+        icon: options.icon
+      };
+
+      if (options.renameFrom) {
+        propsData.from = options.renameFrom;
+      }
+      if (options.renameTo) {
+        propsData.to = options.renameTo;
+      }
+
       let instance = new component({
-        propsData: {
-          text: content,
-          color,
-          icon
-        }
+        propsData
       });
 
-      log.debug(
-        "[LicenseScanner.vue] component and instance created, mounting..."
-      );
       instance.$mount();
 
-      log.debug("[LicenseScanner.vue] instance mounted, adding to DOM");
-      this.$refs[ref].appendChild(instance.$el);
-      log.debug("[LicenseScanner.vue] instance added to DOM");
-      log.verbose("[LicenseScanner] item added to list");
-    },
-    addListItemWithRenameButton(
-      ref,
-      content,
-      color,
-      icon,
-      renameFrom,
-      renameTo
-    ) {
-      log.verbose("[LicenseScanner] adding list item...");
-      log.debug(`[LicenseScanner.vue] ref: ${ref}`);
-      log.debug(`[LicenseScanner.vue] content: ${content}`);
-      log.debug(`[LicenseScanner.vue] color: ${color}`);
-      log.debug(`[LicenseScanner.vue] icon: ${icon}`);
-      log.debug(`[LicenseScanner.vue] renaming from: ${renameFrom}`);
-      log.debug(`[LicenseScanner.vue] renaming to: ${renameTo}`);
+      if (options.on) {
+        instance.on(options.on.name, options.on.method);
+      }
 
-      let component = Vue.extend(ScanResultWithButton);
-      let instance = new component({
-        propsData: {
-          text: content,
-          color,
-          icon,
-          from: renameFrom,
-          to: renameTo
-        }
-      });
-
-      log.debug(
-        "[LicenseScanner] component and instance created, adding listeners and mounting..."
-      );
-      instance.$on("rescan", this.scan);
-      instance.$mount();
-
-      log.debug(
-        "[LicenseScanner] listeners added, instance mounted; adding to DOM"
-      );
-      this.$refs[ref].appendChild(instance.$el);
-      log.verbose("[LicenseScanner] item added to list");
+      this.$refs[options.ref].appendChild(instance.$el);
     },
     displayLicenseContents(lic) {
       log.verbose("[LicenseScanner] displaying license contents...");
@@ -267,33 +252,31 @@ export default {
       this.$refs.file.appendChild(instance.$el);
       log.verbose("[LicenseScanner] license contents added");
     },
+    // Loops through a list of license files and sends each one to the DOM
     displayLicenses(licenseList) {
       log.debug("[LicenseScanner.vue] displaying licenses from list:");
       log.debug(licenseList);
+      let options = {
+        ref: "file"
+      };
 
       if (licenseList.length == 0) {
         log.verbose("[LicenseScanner] no licenses to display");
         log.debug(
           "[LicenseScanner.vue] adding list item to 'file' list with failure status"
         );
-        this.addListItem(
-          "file",
-          "No license file found",
-          FAILURE,
-          FAILURE_ICON
-        );
+        options.content = "No license file found";
+        options.color = FAILURE;
+        options.icon = FAILURE_ICON;
       } else {
         if (licenseList.length == 1) {
           log.verbose("[LicenseScanner] only one license found - no conflicts");
           log.debug(
             "[LicenseScanner.vue] adding list item to 'file' list with success status"
           );
-          this.addListItem(
-            "file",
-            "Single license file found - no conflicts",
-            SUCCESS,
-            SUCCESS_ICON
-          );
+          options.content = "Single license file found - no conflicts";
+          options.color = SUCCESS;
+          options.icon = SUCCESS_ICON;
         } else {
           log.verbose(
             "[LicenseScanner] multiple licenses found - there may be conflicts"
@@ -301,12 +284,9 @@ export default {
           log.debug(
             "[LicenseScanner.vue] adding list item to 'file' list with failure status"
           );
-          this.addListItem(
-            "file",
-            "Multiple license files found - conflicts likely",
-            FAILURE,
-            FAILURE_ICON
-          );
+          options.content = "Multiple license files found - conflicts likely";
+          options.color = FAILURE;
+          options.icon = FAILURE_ICON;
         }
 
         log.debug(
@@ -323,7 +303,10 @@ export default {
           this.displayLicenseContents(lic);
         }
       }
+
+      this.addListItem(options);
     },
+    // Reads a license file and parses the data into a "license" object
     readLicenseFile(filePath) {
       log.verbose(`[LicenseScanner] reading license file: ${filePath}`);
       let fileContents = fs.readFileSync(filePath, {
@@ -345,6 +328,7 @@ export default {
 
       return license;
     },
+    // Checks for misspelled "licenses" directory using a regular expression
     checkSpelling() {
       log.verbose("[LicenseScanner] checking for common spelling mistakes...");
 
@@ -358,48 +342,13 @@ export default {
 
       return folder.length > 0 ? folder[0] : false;
     },
-    getLicenseFiles() {
-      log.verbose(
-        "[LicenseScanner] scanning for files ending with .lic and .config..."
-      );
-
-      let contents = fs.readdirSync(this.licenseDirPath);
-      log.debug("[LicenseScanner.vue] license directory contents:");
-      log.debug(contents);
-
-      if (contents.length == 0) {
-        log.verbose("[LicenseScanner] no files found");
-        return [];
-      } else {
-        log.verbose("[LicenseScanner] filtering for .lic and .config files...");
-        let licenseFiles = contents.filter(
-          f => f.endsWith(".lic") || f.endsWith(".config")
-        );
-        log.debug("[LicenseScanner.vue] license files found:");
-        log.debug(licenseFiles);
-        this.licenseList = licenseFiles;
-        return licenseFiles;
-      }
-    },
     isLowerCase() {
       log.verbose(
         "[LicenseScanner] checking if licenses directory is all lowercase..."
       );
 
-      log.verbose("[LicenseScanner] filtering for 'licenses' directory");
-      let dirContents = this.redGiantDirContents.filter(d =>
-        d.includes("icenses")
-      );
-
-      if (dirContents.length >= 1) {
-        log.verbose(
-          "[LicenseScanner] directory found, verifying capitalization"
-        );
-        return dirContents[0] === "licenses";
-      } else {
-        log.verbose("[LicenseScanner] no directory found");
-        return false;
-      }
+      let lowercase = this.redGiantDirContents.some(d => d === "licenses");
+      return lowercase;
     },
     defaultDirExists() {
       let regex = new RegExp("[L|l]icenses");
@@ -411,9 +360,6 @@ export default {
       } else {
         return false;
       }
-    },
-    dirExists(dirPath) {
-      return fs.existsSync(dirPath);
     }
   }
 };

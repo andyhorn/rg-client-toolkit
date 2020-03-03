@@ -22,7 +22,7 @@
             <RenameButton
               :oldPath="licenseFrom"
               :newPath="licenseTo"
-              v-on:renameComplete="reScan"
+              @renameComplete="reScan"
             />
           </div>
         </b-td>
@@ -30,9 +30,9 @@
     </b-table-simple>
     <div class="buttons">
       <LicenseTestButton
-        v-on:testLicense="this.testLicense"
-        v-bind:host="license.host"
-        v-bind:port="license.port"
+        @testLicense="this.testLicense"
+        :host="license.host"
+        :port="license.port"
       />
     </div>
   </b-list-group-item>
@@ -59,6 +59,7 @@ export default {
     };
   },
   mounted() {
+    // Check if the license file is a .lic file or .config file
     log.debug("[LicenseFile.vue] view mounted");
     let isConfig = path.extname(this.license.name) == ".config";
     log.verbose(
@@ -67,6 +68,7 @@ export default {
         : "[LicenseFile] proper lic file detected"
     );
 
+    // If the file ends with .config, prepare for possible rename
     if (isConfig) {
       log.debug("[LicenseFile.vue] setting license rename parameters");
       this.configWarning = true;
@@ -82,6 +84,7 @@ export default {
     }
   },
   methods: {
+    // Change the extension on the file
     changeExtension(oldPath, oldExtension, newExtension) {
       log.debug("[LicenseFile.vue] changing extension...");
       log.debug(`[LicenseFile.vue] oldPath: ${oldPath}`);
@@ -96,12 +99,16 @@ export default {
 
       return newPath;
     },
+    // Emits a "rescan" event to automatically update the data displayed
+    // to the user
     reScan() {
       log.verbose(
         "[LicenseFile] rename complete event caught, emitting rescan event"
       );
       this.$emit("rescan");
     },
+    // Emits a "test license" event to transfer the license data over to the
+    // port scan utility
     testLicense(data) {
       log.verbose("[LicenseFile] test button clicked");
       log.debug(`[LicenseFile.vue] license data:`);
