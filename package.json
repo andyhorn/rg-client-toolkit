@@ -5,7 +5,7 @@
     "email": "andyjhorn@gmail.com",
     "name": "Andy Horn"
   },
-  "version": "1.4.7",
+  "version": "1.4.8",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
