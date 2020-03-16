@@ -7,11 +7,7 @@
         <b-icon v-bind:icon="icon" class="h3"></b-icon>
         {{ text }}
       </p>
-      <RenameButton
-        :oldPath="from"
-        :newPath="to"
-        @renameComplete="rescan"
-      />
+      <RenameButton :oldPath="from" :newPath="to" @renameComplete="rescan" />
     </div>
   </b-list-group-item>
 </template>

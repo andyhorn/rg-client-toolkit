@@ -35,7 +35,7 @@ const FAILURE_ICON = "alert-triangle";
 
 // Attempts to pull the filename from a full path using the "fs" utility.
 // Will check that the path exists and that it is a file; otherwise returns
-// null. 
+// null.
 function getFileName(fullPath) {
   log.debug(`[LicenseScanner.vue] finding filename for path "${fullPath}"`);
   if (!fs.existsSync(fullPath)) {
@@ -62,9 +62,10 @@ export default {
       // flag for controlling the display of the results section
       display: false,
       // the full filepath for the "Red Giant" directory
-      redGiantDirPath: process.platform == "win32"
-        ? path.join("C:", "ProgramData", "Red Giant")
-        : path.join(path.sep, "Users", "Shared", "Red Giant"),
+      redGiantDirPath:
+        process.platform == "win32"
+          ? path.join("C:", "ProgramData", "Red Giant")
+          : path.join(path.sep, "Users", "Shared", "Red Giant"),
       // holds a list of subdirectories and files of the "Red Giant" directory
       redGiantDirContents: [],
       // the full filepath of the "licenses" directory
@@ -86,12 +87,14 @@ export default {
   },
   methods: {
     findLicenseFiles() {
-      console.log(this.licenseDirPath)
+      // console.log(this.licenseDirPath);
       if (fs.existsSync(this.licenseDirPath)) {
         let contents = fs.readdirSync(this.licenseDirPath);
-        console.log(contents)
-        this.licenseList = contents.filter(i => i.endsWith(".lic") || i.endsWith(".config"));
-        console.log(this.licenseList);
+        // console.log(contents);
+        this.licenseList = contents.filter(
+          i => i.endsWith(".lic") || i.endsWith(".config")
+        );
+        // console.log(this.licenseList);
       }
     },
     // send the license data to be used in the port scan utility

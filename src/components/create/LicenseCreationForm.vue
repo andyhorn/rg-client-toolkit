@@ -16,7 +16,7 @@
           <label class="active">RLM Port</label>
         </b-col>
         <b-col cols="12">
-          <b-button variant="primary" @click="this.save" class="btn"
+          <b-button variant="primary" @click="save" class="btn"
             >Save</b-button
           >
         </b-col>
@@ -27,7 +27,7 @@
 
 <script>
 import path from "path";
-import File from "../../utils/file";
+import { write } from "../../utils/file";
 const { dialog } = require("electron").remote;
 import log from "../../utils/log";
 
@@ -38,9 +38,10 @@ export default {
       host: null,
       port: "5053",
       platform: process.platform,
-      licenseDirPath: process.platform == "win32"
-        ? path.join("C:", "ProgramData", "Red Giant", "licenses")
-        : path.join(path.sep, "Users", "Shared", "Red Giant", "licenses")
+      licenseDirPath:
+        process.platform == "win32"
+          ? path.join("C:", "ProgramData", "Red Giant", "licenses")
+          : path.join(path.sep, "Users", "Shared", "Red Giant", "licenses")
     };
   },
   methods: {
@@ -61,11 +62,11 @@ export default {
       if (chosenPath) {
         log.info("[LicenseCreationForm] license saved!");
         log.debug(`[LicenseCreationForm.vue] path chosen: ${chosenPath}`);
-        File.write(chosenPath, data);
+        write(chosenPath, data);
         log.verbose(`[LicenseCreationForm] file write completed`);
+      } else {
+        log.info("[LicenseCreationForm] license save canceled");
       }
-
-      log.info("[LicenseCreationForm] license save canceled");
     }
   }
 };
